@@ -59,3 +59,6 @@ This project is a web-based system to manage **Call of Duty Multiplayer Tourname
 │   └── create_tables.sql   (empty for now)
 │
 └── README.txt
+
+Contact info:
+Email: 236301126@gmail.com
