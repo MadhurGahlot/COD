@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Manage Teams</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #111;
+            color: white;
+            text-align: center;
+        }
+        form {
+            margin-top: 20px;
+        }
+        input[type=text] {
+            padding: 10px;
+            width: 250px;
+            border-radius: 5px;
+            border: none;
+            outline: none;
+        }
+        button {
+            padding: 10px 20px;
+            margin-left: 10px;
+            background: #e63946;
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        table {
+            margin: auto;
+            margin-top: 40px;
+            width: 60%;
+            border-collapse: collapse;
+            color: white;
+        }
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid grey;
+        }
+        th {
+            color: #e63946;
+        }
+        a {
+            color: #e63946;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Manage Teams</h1>
+
+<form method="POST">
+    <input type="text" name="team_name" placeholder="Enter Team Name" required>
+    <button type="submit">Add Team</button>
+</form>
+
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Team Name</th>
+    </tr>
+    {% for team in teams %}
+    <tr>
+        <td>{{ team[0] }}</td>
+        <td>{{ team[1] }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<button onclick="location.href='/admin/dashboard'">Back to Dashboard</button>
+
+</body>
+</html>

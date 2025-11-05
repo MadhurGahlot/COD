@@ -9,3 +9,32 @@ def get_db_connection():
         database=DB_NAME
     )
     return conn
+
+# ✅ IMPORTANT: Get connection first
+conn = get_db_connection()
+cursor = conn.cursor()
+
+# Create teams table
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS teams (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    team_name VARCHAR(100) NOT NULL
+);
+""")
+
+# Create players table
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS players (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    player_name VARCHAR(100) NOT NULL,
+    cod_name VARCHAR(100) NOT NULL,
+    team_id INT,
+    photo VARCHAR(255),
+    FOREIGN KEY(team_id) REFERENCES teams(id) ON DELETE SET NULL
+);
+""")
+
+conn.commit()
+conn.close()
+
+print("Database setup completed ✅")

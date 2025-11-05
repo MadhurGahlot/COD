@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #111;
+            color: white;
+            text-align: center;
+        }
+        h1 {
+            margin-top: 30px;
+        }
+        .container {
+            margin-top: 40px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .card {
+            background: #1e1e1e;
+            padding: 20px;
+            width: 250px;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: center;
+            transition: 0.3s;
+            border: 2px solid transparent;
+        }
+        .card:hover {
+            border-color: #e63946;
+            transform: scale(1.05);
+        }
+        button {
+            margin-top: 30px;
+            padding: 10px 20px;
+            background: #e63946;
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background: #b92c37;
+        }
+    </style>
+</head>
+<body>
+
+<h1>🎮 Admin Dashboard</h1>
+<p>Manage Tournament Data</p>
+
+<div class="container">
+    <div class="card" onclick="location.href='/admin/teams'">
+        <h3>Manage Teams</h3>
+    </div>
+    <div class="card" onclick="location.href='/admin/players'">
+        <h3>Manage Players</h3>
+    </div>
+    <div class="card" onclick="location.href='/admin/matches'">
+        <h3>Enter Match Results</h3>
+    </div>
+    <div class="card" onclick="location.href='/admin/leaderboard'">
+        <h3>Leaderboard</h3>
+    </div>
+    <div class="card" onclick="location.href='/admin/winners'">
+        <h3>Hall of Fame (Winners)</h3>
+    </div>
+</div>
+
+<button onclick="location.href='/admin/logout'">Logout</button>
+
+</body>
+</html>

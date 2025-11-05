@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Manage Players</title>
+    <style>
+        body { background: #111; color: white; text-align: center; font-family: Arial; }
+        form { margin-top: 20px; }
+        input, select {
+            padding: 10px; width: 230px; border-radius: 5px; border: none; margin: 5px;
+        }
+        button {
+            padding: 10px 20px; background: #e63946; color: white; border: none;
+            cursor: pointer; border-radius: 5px;
+        }
+        table {
+            width: 85%; margin: auto; margin-top: 40px; border-collapse: collapse;
+        }
+        th, td { border-bottom: 1px solid grey; padding: 10px; }
+        img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; }
+    </style>
+</head>
+<body>
+
+<h1>Manage Players</h1>
+
+<form action="/admin/add_player" method="POST" enctype="multipart/form-data">
+    <input type="text" name="player_name" placeholder="Player Full Name" required>
+    <input type="text" name="cod_name" placeholder="COD In-Game Name" required>
+    <input type="email" name="email" placeholder="College Email (@gkv.ac.in)" required>
+
+    <select name="team_id" required>
+        <option disabled selected>Select Team</option>
+        {% for team in teams %}
+            <option value="{{ team.id }}">{{ team.team_name }}</option>
+        {% endfor %}
+    </select>
+
+    <input type="file" name="photo" accept="image/*">
+    <input type="number" name="year" placeholder="Tournament Year" required>
+
+    <button type="submit">Add Player</button>
+</form>
+
+<table>
+<tr>
+    <th>Photo</th>
+    <th>Name</th>
+    <th>COD Name</th>
+    <th>Email</th>
+    <th>Team</th>
+</tr>
+
+{% for p in players %}
+<tr>
+    <td>
+        {% if p.photo %}
+            <img src="/static/player_photos/{{ p.photo }}">
+        {% else %}
+            No Photo
+        {% endif %}
+    </td>
+    <td>{{ p.player_name }}</td>
+    <td>{{ p.cod_name }}</td>
+    <td>{{ p.email }}</td>
+    <td>{{ p.team_name if p.team_name else "No Team" }}</td>
+</tr>
+{% endfor %}
+</table>
+
+<br>
+<button onclick="location.href='/admin/dashboard'">Back</button>

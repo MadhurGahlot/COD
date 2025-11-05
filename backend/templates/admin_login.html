@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Login</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #111;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: white;
+        }
+        .login-box {
+            background: #1a1a1a;
+            padding: 25px;
+            border-radius: 8px;
+            width: 300px;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(0,0,0,0.6);
+        }
+        input {
+            width: 95%;
+            padding: 8px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #e63946;
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button:hover {
+            background: #b92c37;
+        }
+        .error {
+            color: #ff6961;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-box">
+    <h2>Admin Login</h2>
+
+    <form method="POST" action="/admin/login">
+        <input type="text" name="username" placeholder="Username" required><br>
+        <input type="password" id="password" name="password" placeholder="Password" required>
+        <input type="checkbox" onclick="togglePassword()"> Show Password
+
+<script>
+function togglePassword() {
+  var x = document.getElementById("password");
+  if (x.type === "password") {
+    x.type = "text";
+  } else {
+    x.type = "password";
+  }
+}
+</script>
+
+        <button type="submit">Login</button>
+    </form>
+
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+</div>
+
+</body>
+</html>
