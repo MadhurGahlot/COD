@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Enter Match Results</title>
+<style>
+    body { background:#111; color:white; text-align:center; font-family:Arial; }
+    table { width:90%; margin:auto; border-collapse:collapse; }
+    th, td { padding:10px; border-bottom:1px solid gray; }
+    input { width:60px; padding:6px; }
+</style>
+</head>
+<body>
+
+<h2>Enter Match Stats</h2>
+
+<form action="/admin/save_match" method="POST">
+
+<h3>Team A</h3>
+<table>
+<tr><th>Player</th><th>Kills</th><th>Deaths</th><th>Assists</th></tr>
+{% for p in players_a %}
+<tr>
+    <td>{{ p.player_name }}</td>
+    <td><input type="number" name="kills_{{ p.id }}" required></td>
+    <td><input type="number" name="deaths_{{ p.id }}" required></td>
+    <td><input type="number" name="assists_{{ p.id }}" required></td>
+</tr>
+{% endfor %}
+</table>
+
+<br>
+
+<h3>Team B</h3>
+<table>
+<tr><th>Player</th><th>Kills</th><th>Deaths</th><th>Assists</th></tr>
+{% for p in players_b %}
+<tr>
+    <td>{{ p.player_name }}</td>
+    <td><input type="number" name="kills_{{ p.id }}" required></td>
+    <td><input type="number" name="deaths_{{ p.id }}" required></td>
+    <td><input type="number" name="assists_{{ p.id }}" required></td>
+</tr>
+{% endfor %}
+</table>
+
+<br>
+<button type="submit">Save Match Result ✅</button>
+
+</form>
+
+</body>
+</html>

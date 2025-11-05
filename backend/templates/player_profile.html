@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head><link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+ <head>
+    <title>{{ player.player_name }} - Profile</title>
+    <style>
+        body { background: #111; color: white; font-family: Arial; text-align: center; }
+        .profile-box { margin-top: 40px; background: #1e1e1e; padding: 30px; width: 420px; border-radius: 10px; margin:auto; }
+        img { width: 140px; height:140px; object-fit:cover; border-radius: 10px; border: 2px solid #e63946; }
+        table { margin-top: 20px; margin-left:auto; margin-right:auto; }
+        td { padding: 6px 14px; }
+    </style>
+</head>
+<body>
+
+<h1>🎮 Player Profile</h1>
+
+<div class="profile-box">
+    {% if player.photo %}
+        <img src="/static/player_photos/{{ player.photo }}">
+    {% else %}
+        <img src="/static/default_player.png">
+    {% endif %}
+
+    <h2>{{ player.player_name }} ( {{ player.cod_name }} )</h2>
+    <p>Team: {{ player.team_name if player.team_name else 'No Team Assigned' }}</p>
+
+    <table>
+        <tr><td><b>Email:</b></td><td>{{ player.email }}</td></tr>
+        <tr><td><b>Kills:</b></td><td>{{ player.kills }}</td></tr>
+        <tr><td><b>Deaths:</b></td><td>{{ player.deaths }}</td></tr>
+        <tr><td><b>Assists:</b></td><td>{{ player.assists }}</td></tr>
+        <tr><td><b>K/D Ratio:</b></td><td>{{ "%.2f" % (player.kd_ratio or 0) }}</td></tr>
+        <tr><td><b>Total Matches:</b></td><td>{{ player.total_matches }}</td></tr>
+        <tr><td><b>Year:</b></td><td>{{ player.year }}</td></tr>
+    </table>
+</div>
+
+<br>
+<button onclick="location.href='/admin/players'" style="padding:10px 20px; background:#e63946; border:none; border-radius:5px; color:white;">
+    Back to Players
+</button>
+
+</body>
+</html>
+

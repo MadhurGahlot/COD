@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Select Teams</title>
+<style>
+    body { background:#111; color:white; text-align:center; font-family:Arial; }
+    select, button { padding:10px; margin:10px; }
+</style>
+</head>
+<body>
+
+<h2>Select Teams for Match</h2>
+
+<form method="POST">
+    <select name="team_a" required>
+        <option disabled selected>Team A</option>
+        {% for t in teams %}
+        <option value="{{ t.id }}">{{ t.team_name }}</option>
+        {% endfor %}
+    </select>
+
+    <select name="team_b" required>
+        <option disabled selected>Team B</option>
+        {% for t in teams %}
+        <option value="{{ t.id }}">{{ t.team_name }}</option>
+        {% endfor %}
+    </select>
+
+    <br>
+    <button type="submit">Next →</button>
+</form>
+
+</body>
+</html>

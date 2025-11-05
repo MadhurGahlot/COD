@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <head><link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<head>
+    <title>Hall of Fame</title>
+    <style>
+        body {
+            margin: 0;
+            background: #111;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .winner-section {
+            width: 100%;
+            padding: 60px 20px;
+            border-bottom: 1px solid #333;
+        }
+        .winner-section img {
+            width: 80%;
+            max-width: 900px;
+            border-radius: 15px;
+            object-fit: cover;
+            border: 3px solid #e63946;
+        }
+        h1 {
+            font-size: 40px;
+            margin-top: 20px;
+            color: #e63946;
+        }
+        h2 { margin-top: 5px; }
+        .runner {
+            margin-top: 8px;
+            font-size: 18px;
+            opacity: 0.75;
+        }
+    </style>
+</head>
+<body>
+
+<h1>🏆 Hall of Fame</h1>
+<p>Past Tournament Champions</p>
+
+{% for w in winners %}
+<div class="winner-section">
+    {% if w.winner_photo %}
+        <img src="/static/winner_photos/{{ w.winner_photo }}">
+    {% else %}
+        <img src="/static/default_winner.jpg">
+    {% endif %}
+
+    <h1>{{ w.year }} Champions</h1>
+    <h2>🥇 {{ w.winner_team }}</h2>
+    <p class="runner">🥈 Runner-Up: {{ w.runnerup_team }}</p>
+</div>
+{% endfor %}
+
+</body>
+</html>
+

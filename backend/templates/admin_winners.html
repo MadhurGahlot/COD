@@ -1,0 +1,23 @@
+<form method="POST" enctype="multipart/form-data">
+    <input type="number" name="year" placeholder="Tournament Year" required>
+
+    <select name="winner_team_id" required>
+        <option value="">Select Winner Team</option>
+        {% for t in teams %}
+        <option value="{{ t.id }}">{{ t.team_name }}</option>
+        {% endfor %}
+    </select>
+
+    <select name="runnerup_team_id" required>
+        <option value="">Select Runner-Up Team</option>
+        {% for t in teams %}
+        <option value="{{ t.id }}">{{ t.team_name }}</option>
+        {% endfor %}
+    </select>
+
+    <label>Winner Photo:</label>
+    <input type="file" name="winner_photo">
+
+    <button type="submit">Save</button>
+</form>
+

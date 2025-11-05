@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<head> 
+    <head>
+    <title>Leaderboard</title>
+    <style>
+        body { background:#111; color:white; font-family:Arial; text-align:center; }
+        table { width:85%; margin:auto; margin-top:40px; border-collapse:collapse; }
+        th, td { padding:12px; border-bottom:1px solid #444; }
+        img { width:40px; height:40px; border-radius:50%; object-fit:cover; }
+        th { background:#e63946; }
+        a { color:#e63946; text-decoration:none; }
+    </style>
+</head>
+<body>
+
+<h1>🏆 Leaderboard</h1>
+<p>Top players ranked by K/D Ratio</p>
+
+<table>
+<tr>
+    <th>Rank</th>
+    <th>Photo</th>
+    <th>Player</th>
+    <th>Team</th>
+    <th>Kills</th>
+    <th>Deaths</th>
+    <th>Assists</th>
+    <th>K/D Ratio</th>
+    <th>Total Matches</th>
+</tr>
+
+{% for p in leaderboard %}
+<tr>
+    <td>{{ loop.index }}</td>
+    <td>
+        {% if p.photo %}
+            <img src="/static/player_photos/{{ p.photo }}">
+        {% else %}
+            No Photo
+        {% endif %}
+    </td>
+    <td><a href="/player/{{ p.id }}">{{ p.player_name }}</a></td>
+    <td>{{ p.team_name }}</td>
+    <td>{{ p.kills }}</td>
+    <td>{{ p.deaths }}</td>
+    <td>{{ p.assists }}</td>
+    <td>{{ "%.2f"|format(p.kd_ratio if p.kd_ratio else 0) }}</td>
+    <td>{{ p.total_matches }}</td>
+</tr>
+{% endfor %}
+</table>
+
+<br>
+<button onclick="location.href='/admin/dashboard'" style="padding:10px 20px; background:#e63946; border:none; border-radius:5px; color:white;">
+    Back to Dashboard
+</button>
+
+</body>
+</html>
+

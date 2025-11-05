@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Add Match Result</title>
+<style>
+body { background:#111; color:#fff; font-family:Arial; text-align:center; }
+form { margin-top:40px; }
+input, select {
+    padding:10px; width:250px; margin:5px; border:none; border-radius:5px;
+}
+button { padding:10px 25px; background:#e63946; border:none; color:white; cursor:pointer; border-radius:5px; }
+</style>
+</head>
+<body>
+
+<h1>Add Match Result</h1>
+
+<form action="/admin/add_match" method="POST">
+
+<select name="player_id" required>
+    <option selected disabled>Select Player</option>
+    {% for p in players %}
+        <option value="{{ p.id }}">{{ p.player_name }}</option>
+    {% endfor %}
+</select>
+
+<input type="text" name="opponent" placeholder="Opponent Team Name" required>
+<input type="number" name="kills" placeholder="Kills" required>
+<input type="number" name="deaths" placeholder="Deaths" required>
+<input type="number" name="assists" placeholder="Assists">
+<input type="date" name="match_date" required>
+
+<button type="submit">Submit Match Result</button>
+</form>
+
+</body>
+</html>

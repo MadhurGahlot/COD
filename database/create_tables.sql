@@ -2,14 +2,14 @@
 CREATE DATABASE IF NOT EXISTS cod_tournament;
 USE cod_tournament;
 
--- 1️⃣ Admin table
+-- 1️ Admin table
 CREATE TABLE IF NOT EXISTS admin (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL,
     password VARCHAR(100) NOT NULL
 );
 
--- 2️⃣ Teams table
+-- 2️ Teams table
 CREATE TABLE IF NOT EXISTS teams (
     id INT AUTO_INCREMENT PRIMARY KEY,
     team_name VARCHAR(100) NOT NULL,
@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS teams (
     kd_ratio FLOAT DEFAULT 0
 );
 
--- 3️⃣ Players table
+-- 3️ Players table
 CREATE TABLE IF NOT EXISTS players (
     id INT AUTO_INCREMENT PRIMARY KEY,
     player_name VARCHAR(100) NOT NULL,
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS players (
     FOREIGN KEY (team_id) REFERENCES teams(id) ON DELETE SET NULL
 );
 
--- 4️⃣ Matches table
+-- 4️ Matches table
 CREATE TABLE IF NOT EXISTS matches (
     id INT AUTO_INCREMENT PRIMARY KEY,
     team1_id INT,
@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS matches (
     FOREIGN KEY (winner_team_id) REFERENCES teams(id)
 );
 
--- 5️⃣ Tournament Winners table
+-- 5️ Tournament Winners table
 CREATE TABLE IF NOT EXISTS winners (
     id INT AUTO_INCREMENT PRIMARY KEY,
     year INT NOT NULL,
@@ -62,3 +62,25 @@ CREATE TABLE IF NOT EXISTS winners (
     FOREIGN KEY (winner_team_id) REFERENCES teams(id),
     FOREIGN KEY (runnerup_team_id) REFERENCES teams(id)
 );
+
+--  6 Matches result
+CREATE TABLE IF NOT EXISTS matchesresult (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    player_id INT NOT NULL,
+    opponent VARCHAR(100) NOT NULL,
+    kills INT NOT NULL,
+    deaths INT NOT NULL,
+    assists INT DEFAULT 0,
+    match_date DATE NOT NULL,
+    FOREIGN KEY (player_id) REFERENCES players(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS winners (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    year INT NOT NULL,
+    team_id INT,
+    notes TEXT,
+    FOREIGN KEY (team_id) REFERENCES teams(id) ON DELETE SET NULL
+);
+
+

@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, session
 from database import get_db_connection
+#from database import mydb
 import mysql.connector
 
 app = Flask(__name__)
@@ -126,6 +127,282 @@ def admin_logout():
     session.pop("admin_logged_in", None)
     return redirect("/admin/login")
 # --------------------------------------------------------
+
+# ----------------------- Home HTML ----------------
+@app.route("/home")
+def public_home():
+    return render_template("home.html")
+
+# -------------------TEAMS HTML -------------------
+@app.route("/teams")
+def public_teams():
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT teams.id, teams.team_name, COUNT(players.id) AS player_count
+        FROM teams
+        LEFT JOIN players ON players.team_id = teams.id
+        GROUP BY teams.id
+    """)
+    teams = cursor.fetchall()
+
+    conn.close()
+    return render_template("teams.html", teams=teams)
+# -------------------- Teams details ---------- 
+
+@app.route("/team/<int:team_id>")
+def team_details(team_id):
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    # Get team info
+    cursor.execute("SELECT * FROM teams WHERE id=%s", (team_id,))
+    team = cursor.fetchone()
+
+    # Get players of that team
+    cursor.execute("""
+    SELECT id AS player_id, player_name, cod_name, email, photo, kills, deaths, assists, kd_ratio
+    FROM players
+    WHERE team_id=%s
+""", (team_id,))
+
+    players = cursor.fetchall()
+
+    conn.close()
+    return render_template("team_details.html", team=team, players=players)
+
+
+#------------------- Player Profile route ------------------
+@app.route("/player/<int:player_id>")
+def player_profile(player_id):
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT players.*, teams.team_name 
+        FROM players
+        LEFT JOIN teams ON players.team_id = teams.id
+        WHERE players.id=%s
+    """, (player_id,))
+    
+    player = cursor.fetchone()
+    conn.close()
+
+    return render_template("player_profile.html", player=player)
+
+
+# Team vs Team Rsult --------------------
+
+@app.route("/admin/matches", methods=["GET", "POST"])
+def admin_matches():
+    if "admin_logged_in" not in session:
+        return redirect("/admin/login")
+
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    # Get all teams
+    cursor.execute("SELECT * FROM teams")
+    teams = cursor.fetchall()
+
+    if request.method == "POST":
+        team_a = request.form["team_a"]
+        team_b = request.form["team_b"]
+
+        # Get players of both teams
+        cursor.execute("SELECT * FROM players WHERE team_id = %s", (team_a,))
+        players_a = cursor.fetchall()
+
+        cursor.execute("SELECT * FROM players WHERE team_id = %s", (team_b,))
+        players_b = cursor.fetchall()
+
+        conn.close()
+
+        return render_template("enter_match_result.html", players_a=players_a, players_b=players_b)
+
+    conn.close()
+    return render_template("select_teams.html", teams=teams)
+
+
+#--------           MATCHES RESULT-----------
+@app.route("/admin/add_match", methods=["GET", "POST"])
+def add_match():
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    if request.method == "POST":
+        player_id = request.form["player_id"]
+        opponent = request.form["opponent"]
+        kills = int(request.form["kills"])
+        deaths = int(request.form["deaths"])
+        assists = int(request.form["assists"])
+        match_date = request.form["match_date"]
+
+        # Insert match record
+        cursor.execute("""
+            INSERT INTO matchesresult (player_id, opponent, kills, deaths, assists, match_date)
+            VALUES (%s, %s, %s, %s, %s, %s)
+        """, (player_id, opponent, kills, deaths, assists, match_date))
+
+        # Update player stats
+        cursor.execute("""
+            UPDATE players 
+            SET kills = kills + %s,
+                deaths = deaths + %s,
+                assists = assists + %s,
+                total_matches = total_matches + 1,
+                kd_ratio = (kills + %s) / NULLIF((deaths + %s), 0)
+            WHERE id = %s
+        """, (kills, deaths, assists, kills, deaths, player_id))
+
+        conn.commit()
+        conn.close()
+        return redirect("/admin/add_match")
+
+    # Get players for dropdown
+    cursor.execute("SELECT id, player_name FROM players")
+    players = cursor.fetchall()
+    conn.close()
+
+    return render_template("add_match.html", players=players)
+
+# ---------------------- SAVE DAT OF TEAM VS TEAM TO DATABASE ---------------
+@app.route("/admin/save_match", methods=["POST"])
+def save_match():
+    if "admin_logged_in" not in session:
+        return redirect("/admin/login")
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT id FROM players")
+    players = cursor.fetchall()
+
+    for (player_id,) in players:
+        kills = request.form.get(f"kills_{player_id}")
+        deaths = request.form.get(f"deaths_{player_id}")
+        assists = request.form.get(f"assists_{player_id}")
+
+        if kills:
+            cursor.execute("""
+                UPDATE players
+                SET kills = kills + %s, deaths = deaths + %s, assists = assists + %s,
+                    total_matches = total_matches + 1,
+                    kd_ratio = (kills + %s) / NULLIF((deaths + %s),0)
+                WHERE id = %s
+            """, (kills, deaths, assists, kills, deaths, player_id))
+
+    conn.commit()
+    conn.close()
+
+    return redirect("/admin/leaderboard")
+
+#------------------- LEADER BOARD --------------------------
+@app.route("/leaderboard")
+def leaderboard():
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT players.*, teams.team_name 
+        FROM players
+        LEFT JOIN teams ON players.team_id = teams.id
+        ORDER BY kd_ratio DESC
+    """)
+
+    leaderboard = cursor.fetchall()
+    conn.close()
+
+    return render_template("leaderboard.html", leaderboard=leaderboard)
+
+
+
+# ------------------------- ADMIN HALL OF FAME -----------
+@app.route("/admin/winners", methods=["GET", "POST"])
+def admin_winners():
+    if "admin_logged_in" not in session:
+        return redirect("/admin/login")
+
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    # Add Winner Entry
+    if request.method == "POST":
+        year = request.form["year"]
+        winner_team_id = request.form["winner_team_id"]
+        runnerup_team_id = request.form["runnerup_team_id"]
+        
+        photo_file = request.files.get("winner_photo")
+        filename = None
+        if photo_file and photo_file.filename != "":
+            filename = secure_filename(photo_file.filename)
+            photo_file.save(os.path.join("static/player_photos", filename))
+
+        cursor.execute("""
+            INSERT INTO winners (year, winner_team_id, runnerup_team_id, winner_photo)
+            VALUES (%s, %s, %s, %s)
+        """, (year, winner_team_id, runnerup_team_id, filename))
+
+        conn.commit()
+
+    # Load Teams for dropdown
+    cursor.execute("SELECT id, team_name FROM teams")
+    teams = cursor.fetchall()
+
+    # Load Winners List
+    cursor.execute("""
+    SELECT winners.year, winners.winner_photo,
+           t1.team_name AS winner_team,
+           t2.team_name AS runnerup_team
+    FROM winners
+    LEFT JOIN teams t1 ON winners.winner_team_id = t1.id
+    LEFT JOIN teams t2 ON winners.runnerup_team_id = t2.id
+    ORDER BY winners.year DESC
+     """)
+    winners = cursor.fetchall()
+
+    conn.close()
+    return render_template("admin_winners.html", teams=teams, winners=winners)
+
+
+# -------------------- Public Hall of fame -----------------
+@app.route("/winners")
+def public_winners():
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT winners.year, winners.winner_photo,
+               t1.team_name AS winner_team,
+               t2.team_name AS runnerup_team
+        FROM winners
+        LEFT JOIN teams t1 ON winners.winner_team_id = t1.id
+        LEFT JOIN teams t2 ON winners.runnerup_team_id = t2.id
+        ORDER BY winners.year DESC
+    """)
+    winners = cursor.fetchall()
+
+    conn.close()
+    return render_template("winners.html", winners=winners)
+#------ - HALL OF FAME TEMPLATE-------
+@app.route("/hall_of_fame")
+def hall_of_fame():
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT w.year, w.winner_photo,
+               t1.team_name AS winner_team,
+               t2.team_name AS runnerup_team
+        FROM winners w
+        LEFT JOIN teams t1 ON w.winner_team_id = t1.id
+        LEFT JOIN teams t2 ON w.runnerup_team_id = t2.id
+        ORDER BY w.year DESC
+    """)
+    winners = cursor.fetchall()
+    return render_template("hall_of_fame.html", winners=winners)
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -1,0 +1,91 @@
+/* ---- Global Styling ---- */
+body {
+  background: #0d0d0d;
+  color: #fff;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Smooth fade-in for all pages */
+.fade-in {
+  animation: fadeIn 0.8s ease-in-out;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ----- A. LEADERBOARD CARD EFFECT ----- */
+.leader-card {
+  background: #141414;
+  padding: 15px;
+  border-radius: 12px;
+  margin: 10px 0;
+  transition: 0.3s;
+}
+.leader-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0px 0px 15px #0ff;
+}
+
+/* ----- B. PLAYER PROFILE ----- */
+.profile-photo {
+  width: 180px;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #00eaff;
+  transition: 0.4s;
+}
+.profile-photo:hover {
+  transform: scale(1.1);
+  box-shadow: 0px 0px 20px #00eaff;
+}
+
+.stats-box {
+  background: #111;
+  padding: 15px;
+  border-radius: 10px;
+  margin: 8px 0;
+  transition: 0.3s;
+}
+.stats-box:hover {
+  transform: translateY(-4px);
+  box-shadow: 0px 0px 12px #00eaff;
+}
+
+/* ----- C. HALL OF FAME ----- */
+.hof-card {
+  background: #1a1400;
+  border: 2px solid gold;
+  padding: 16px;
+  border-radius: 12px;
+  margin: 10px 0;
+  transition: 0.3s;
+}
+.hof-card:hover {
+  transform: scale(1.08);
+  box-shadow: 0px 0px 25px gold;
+}
+
+/* Trophy glow */
+.trophy {
+  font-size: 40px;
+  color: gold;
+  animation: glow 1.5s infinite alternate ease-in-out;
+}
+@keyframes glow {
+  from { text-shadow: 0 0 10px gold; }
+  to { text-shadow: 0 0 25px gold; }
+}
+
+/* ----- D. TEAMS PAGE ----- */
+.team-card {
+  background: #121212;
+  border-radius: 12px;
+  padding: 18px;
+  transition: 0.3s;
+}
+.team-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 18px #0ff;
+}

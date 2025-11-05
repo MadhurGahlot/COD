@@ -1,0 +1,47 @@
+WORK DONE 5-11-2025
+
+COD-Tournament/
+│
+├── backend/
+│   ├── app.py                  ✅ Main Flask application
+│   ├── database.py             ✅ MySQL connection helper
+│   ├── create_tables.sql       ✅ SQL to create tables
+│   └── config.py               ✅ Database credentials
+│
+├── templates/
+│   ├── admin_login.html        ✅
+│   ├── admin_dashboard.html    ✅
+│   ├── admin_teams.html        ✅
+│   ├── admin_players.html      ✅
+│   ├── add_match.html          ✅
+│   ├── enter_match_result.html ✅
+│   ├── select_teams.html       ✅
+│   ├── leaderboard.html        ✅
+│   ├── player_profile.html     ✅
+│   ├── team_details.html       ✅
+│   ├── winners.html            ✅
+│   └── admin_winners.html      ✅
+│
+├── static/
+│   ├── style.css               ✅
+│   ├── player_photos/          ✅
+│   └── team_logos/             ❌ (Pending)
+│
+├── Features/
+│   ├── Admin Login/Logout        ✅
+│   ├── Manage Teams              ✅
+│   ├── Manage Players            ✅
+│   ├── Player Profile Page       ✅
+│   ├── Team Details Page         ✅
+│   ├── Single Player Match Entry ✅
+│   ├── Team vs Team Match Entry  ✅
+│   ├── Player Stats Update       ✅
+│   ├── Leaderboard               ✅
+│   ├── Hall of Fame / Winners    ✅
+│   ├── Edit Player Info          ❌ (Pending)
+│   ├── Edit Team Info            ❌ (Pending)
+│   ├── Team Logo Upload          ❌ (Pending)
+│   └── MVP Badge                 ❌ (Next Step)
+│
+└── Deployment / Hosting
+    └── Integration with college site / IBM Cloud ❌

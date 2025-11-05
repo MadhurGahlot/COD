@@ -1,0 +1,14 @@
+{% for w in winners %}
+<div>
+    <h2>{{ w.year }}</h2>
+    <p>🏆 Winner: {{ w.winner_team }}</p>
+    <p>🥈 Runner-Up: {{ w.runnerup_team }}</p>
+
+    {% if w.winner_photo %}
+        <img src="/static/player_photos/{{ w.winner_photo }}" width="150">
+    {% endif %}
+</div>
+<hr>
+{% endfor %}
+
+

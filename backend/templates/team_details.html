@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ team.team_name }} - Team Details</title>
+    <style>
+        body { background: #000; color: #fff; text-align: center; font-family: Arial; }
+        h1 { margin-top: 30px; }
+
+        .players {
+            width: 80%; margin: auto; margin-top: 40px; border-collapse: collapse;
+        }
+        th, td { padding: 12px; border-bottom: 1px solid #444; }
+        img { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; }
+        
+        a.back {
+            display: inline-block; margin-top: 20px; padding: 10px 20px; text-decoration: none;
+            background: #e63946; color: white; border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>{{ team.team_name }}</h1>
+
+<table class="players">
+<tr>
+    <th>Photo</th>
+    <th>Name</th>
+    <th>COD Name</th>
+    <th>Kills</th>
+    <th>Deaths</th>
+    <th>K/D Ratio</th>
+</tr>
+
+{% for p in players %}
+<tr>
+    <td>
+        {% if p.photo %}
+            <img src="/static/player_photos/{{ p.photo }}">
+        {% else %}
+            No Photo
+        {% endif %}
+    </td>
+    <td><a href="/player/{{ p.player_id }}" style="color:#e63946; text-decoration:none;">{{ p.player_name }}</a></td>
+    <td>{{ p.cod_name }}</td>
+    <td>{{ p.kills }}</td>
+    <td>{{ p.deaths }}</td>
+    <td>{{ "%.2f"|format(p.kd_ratio) }}</td>
+</tr>
+{% endfor %}
+
+</table>
+
+<a class="back" href="/teams">⬅ Back to Teams</a>
+
+</body>
+</html>
