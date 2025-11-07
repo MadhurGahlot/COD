@@ -1,46 +1,101 @@
 <!DOCTYPE html>
 <html>
-<head><link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
- <head>
+<head>
     <title>{{ player.player_name }} - Profile</title>
     <style>
-        body { background: #111; color: white; font-family: Arial; text-align: center; }
-        .profile-box { margin-top: 40px; background: #1e1e1e; padding: 30px; width: 420px; border-radius: 10px; margin:auto; }
-        img { width: 140px; height:140px; object-fit:cover; border-radius: 10px; border: 2px solid #e63946; }
-        table { margin-top: 20px; margin-left:auto; margin-right:auto; }
-        td { padding: 6px 14px; }
+        body {
+            background: #0a0a0a;
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            text-align: center;
+        }
+
+        .profile-card {
+            width: 450px;
+            margin: 60px auto;
+            padding: 25px;
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(6px);
+            border-radius: 14px;
+            box-shadow: 0 0 18px #ff003c77;
+            text-align: center;
+        }
+
+        .profile-card img {
+            width: 150px;
+            height: 150px;
+            border-radius: 12px;
+            object-fit: cover;
+            border: 3px solid #ff003c;
+            box-shadow: 0 0 12px #ff003c;
+        }
+
+        h2 {
+            margin-top: 12px;
+            text-shadow: 0 0 10px #ff003c;
+        }
+
+        .mvp-badge {
+            color: gold;
+            text-shadow: 0 0 12px gold;
+            font-weight: bold;
+            font-size: 24px;
+        }
+
+        table {
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+
+        td {
+            padding: 6px 14px;
+            border-bottom: 1px solid #333;
+        }
+
+        button {
+            margin-top: 25px;
+            padding: 12px 28px;
+            background: #ff003c;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        button:hover {
+            background: #d40032;
+        }
+
     </style>
 </head>
 <body>
 
 <h1>🎮 Player Profile</h1>
 
-<div class="profile-box">
-    {% if player.photo %}
-        <img src="/static/player_photos/{{ player.photo }}">
-    {% else %}
-        <img src="/static/default_player.png">
-    {% endif %}
+<div class="profile-card">
+    <img src="/static/player_photos/{{ player.photo if player.photo else 'default_player.png' }}">
 
-    <h2>{{ player.player_name }} ( {{ player.cod_name }} )</h2>
-    <p>Team: {{ player.team_name if player.team_name else 'No Team Assigned' }}</p>
+    <h2>
+        {{ player.player_name }} ({{ player.cod_name }})
+        {% if mvp and mvp.id == player.id %}
+        <span class="mvp-badge">🥇 MVP</span>
+        {% endif %}
+    </h2>
+
+    <p>Team: <b>{{ player.team_name if player.team_name else 'No Team Assigned' }}</b></p>
 
     <table>
         <tr><td><b>Email:</b></td><td>{{ player.email }}</td></tr>
         <tr><td><b>Kills:</b></td><td>{{ player.kills }}</td></tr>
         <tr><td><b>Deaths:</b></td><td>{{ player.deaths }}</td></tr>
         <tr><td><b>Assists:</b></td><td>{{ player.assists }}</td></tr>
-        <tr><td><b>K/D Ratio:</b></td><td>{{ "%.2f" % (player.kd_ratio or 0) }}</td></tr>
+        <tr><td><b>K/D Ratio:</b></td><td>{{ "%.2f"|format(player.kd_ratio if player.kd_ratio else 0) }}</td></tr>
         <tr><td><b>Total Matches:</b></td><td>{{ player.total_matches }}</td></tr>
         <tr><td><b>Year:</b></td><td>{{ player.year }}</td></tr>
     </table>
 </div>
 
-<br>
-<button onclick="location.href='/admin/players'" style="padding:10px 20px; background:#e63946; border:none; border-radius:5px; color:white;">
-    Back to Players
-</button>
+<button onclick="location.href='/leaderboard'">Back to Leaderboard</button>
 
 </body>
 </html>
-

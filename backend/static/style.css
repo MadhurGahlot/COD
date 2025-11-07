@@ -1,91 +1,148 @@
-/* ---- Global Styling ---- */
 body {
-  background: #0d0d0d;
-  color: #fff;
-  font-family: 'Poppins', sans-serif;
+    background: #050505;
+    color: #ffffff;
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+    margin: 0;
 }
 
-/* Smooth fade-in for all pages */
-.fade-in {
-  animation: fadeIn 0.8s ease-in-out;
-}
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+/* HEADINGS */
+h1, h2, h3 {
+    color: #e63946;
+    text-shadow: 0 0 12px #e63946;
 }
 
-/* ----- A. LEADERBOARD CARD EFFECT ----- */
-.leader-card {
-  background: #141414;
-  padding: 15px;
-  border-radius: 12px;
-  margin: 10px 0;
-  transition: 0.3s;
+/* CARDS / BOXES */
+.card, .profile-box, .team-card {
+    background: #111;
+    padding: 20px;
+    border-radius: 12px;
+    margin: 20px auto;
+    box-shadow: 0 0 18px rgba(230, 57, 70, 0.4);
+    transition: 0.3s;
 }
-.leader-card:hover {
-  transform: scale(1.03);
-  box-shadow: 0px 0px 15px #0ff;
-}
-
-/* ----- B. PLAYER PROFILE ----- */
-.profile-photo {
-  width: 180px;
-  height: 180px;
-  object-fit: cover;
-  border-radius: 50%;
-  border: 3px solid #00eaff;
-  transition: 0.4s;
-}
-.profile-photo:hover {
-  transform: scale(1.1);
-  box-shadow: 0px 0px 20px #00eaff;
+.card:hover, .profile-box:hover, .team-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px rgba(230, 57, 70, 0.7);
 }
 
-.stats-box {
-  background: #111;
-  padding: 15px;
-  border-radius: 10px;
-  margin: 8px 0;
-  transition: 0.3s;
+/* TABLE */
+table {
+    width: 85%;
+    margin: auto;
+    border-collapse: collapse;
+    margin-top: 40px;
 }
-.stats-box:hover {
-  transform: translateY(-4px);
-  box-shadow: 0px 0px 12px #00eaff;
+th {
+    background: #e63946;
+    padding: 12px;
 }
-
-/* ----- C. HALL OF FAME ----- */
-.hof-card {
-  background: #1a1400;
-  border: 2px solid gold;
-  padding: 16px;
-  border-radius: 12px;
-  margin: 10px 0;
-  transition: 0.3s;
+td {
+    padding: 10px;
+    border-bottom: 1px solid #333;
 }
-.hof-card:hover {
-  transform: scale(1.08);
-  box-shadow: 0px 0px 25px gold;
+tr:hover {
+    background: #181818;
 }
 
-/* Trophy glow */
-.trophy {
-  font-size: 40px;
-  color: gold;
-  animation: glow 1.5s infinite alternate ease-in-out;
+/* BUTTONS */
+button {
+    background: #e63946;
+    border: none;
+    color: #fff;
+    padding: 10px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: .3s;
 }
-@keyframes glow {
-  from { text-shadow: 0 0 10px gold; }
-  to { text-shadow: 0 0 25px gold; }
+button:hover {
+    box-shadow: 0 0 15px #e63946;
 }
 
-/* ----- D. TEAMS PAGE ----- */
-.team-card {
-  background: #121212;
-  border-radius: 12px;
-  padding: 18px;
-  transition: 0.3s;
+/* IMAGES */
+img {
+    object-fit: cover;
+    border-radius: 10px;
+    border: 2px solid #e63946;
 }
-.team-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 0 18px #0ff;
+/* === 3D CARD HOVER EFFECT === */
+.card {
+    background: #1a1a1a;
+    border-radius: 12px;
+    padding: 18px;
+    width: 260px;
+    display: inline-block;
+    margin: 18px;
+    text-align: center;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    cursor: pointer;
+    border: 1px solid #333;
 }
+
+.card:hover {
+    transform: translateY(-12px) scale(1.05);
+    box-shadow: 0px 0px 20px #e63946;
+}
+
+/* Player Image Glow */
+.card img {
+    width: 120px;
+    height: 120px;
+    border-radius: 10px;
+    object-fit: cover;
+    border: 3px solid #e63946;
+    transition: 0.3s;
+}
+
+.card:hover img {
+    border-color: gold;
+    box-shadow: 0px 0px 12px gold;
+}
+
+/* Button */
+.btn {
+    background: #e63946;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.25s;
+}
+.btn:hover { background: #ff4655; transform: scale(1.05); }
+
+/* Center Container */
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.dashboard-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+    width: 90%;
+    margin: 40px auto;
+}
+
+.dash-card {
+    background: #1a1a1a;
+    padding: 25px;
+    text-align: center;
+    border-radius: 10px;
+    border: 1px solid #e63946;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 0 8px #e63946;
+}
+
+.dash-card:hover {
+    transform: translateY(-7px) scale(1.05);
+    box-shadow: 0 0 20px #ff4757;
+    border-color: #ff4757;
+}
+

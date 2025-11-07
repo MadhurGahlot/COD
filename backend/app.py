@@ -1,14 +1,23 @@
-from flask import Flask, render_template, request, redirect, session
+from flask import Flask, render_template, request, redirect, session ,send_from_directory
 from database import get_db_connection
+import os
 #from database import mydb
 import mysql.connector
 
 app = Flask(__name__)
 app.secret_key = "your_secret_key"  # change later
 
+# Serve frontend files
 @app.route("/")
 def home():
-    return "COD Tournament Website Running ✅"
+    frontend_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "frontend")
+    return send_from_directory(frontend_path, "index.html")
+
+
+@app.route("/<path:filename>")
+def serve_static_site(filename):
+    return send_from_directory("frontend", filename)
+
 
 # -------------------- ADMIN LOGIN --------------------
 
@@ -66,7 +75,7 @@ def admin_teams():
 
     return render_template("admin_teams.html", teams=teams)
 
-import os
+
 from werkzeug.utils import secure_filename
 UPLOAD_FOLDER = "static/player_photos"
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
@@ -179,17 +188,28 @@ def player_profile(player_id):
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
+    # Get player info
     cursor.execute("""
         SELECT players.*, teams.team_name 
         FROM players
         LEFT JOIN teams ON players.team_id = teams.id
         WHERE players.id=%s
     """, (player_id,))
-    
     player = cursor.fetchone()
+
+    # Get AUTO MVP (Top K/D ratio in all players)
+    cursor.execute("""
+        SELECT * FROM players
+        ORDER BY kd_ratio DESC, kills DESC
+        LIMIT 1
+    """)
+    mvp = cursor.fetchone()
+
     conn.close()
 
-    return render_template("player_profile.html", player=player)
+    return render_template("player_profile.html", player=player, mvp=mvp)
+
+
 
 
 # Team vs Team Rsult --------------------
@@ -314,9 +334,10 @@ def leaderboard():
     leaderboard = cursor.fetchall()
     conn.close()
 
-    return render_template("leaderboard.html", leaderboard=leaderboard)
+    # MVP is the top player in KD ratio
+    mvp = leaderboard[0] if leaderboard else None
 
-
+    return render_template("leaderboard.html", leaderboard=leaderboard, mvp=mvp)
 
 # ------------------------- ADMIN HALL OF FAME -----------
 @app.route("/admin/winners", methods=["GET", "POST"])
@@ -401,6 +422,47 @@ def hall_of_fame():
     """)
     winners = cursor.fetchall()
     return render_template("hall_of_fame.html", winners=winners)
+
+# ---------------------------- SELECT MYP ------------------------------
+@app.route("/admin/select_mvp", methods=["GET", "POST"])
+def select_mvp():
+    if "admin_logged_in" not in session:
+        return redirect("/admin/login")
+
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    # If admin selected MVP
+    if request.method == "POST":
+        selected_player = request.form.get("mvp_player")
+
+        # Reset any previous MVP
+        cursor.execute("UPDATE players SET is_mvp = 0")
+
+        # Set new MVP
+        cursor.execute("UPDATE players SET is_mvp = 1 WHERE id = %s", (selected_player,))
+        conn.commit()
+        conn.close()
+        return redirect("/leaderboard")
+
+    # Get top 3 suggested MVP
+    cursor.execute("""
+        SELECT id, player_name, cod_name, kills, deaths, kd_ratio, total_matches
+        FROM players
+        ORDER BY kd_ratio DESC, kills DESC, deaths ASC
+        LIMIT 3
+    """)
+    suggestions = cursor.fetchall()
+    conn.close()
+
+    return render_template("select_mvp.html", suggestions=suggestions)
+
+
+
+@app.route('/<path:path>')
+def static_proxy(path):
+    return send_from_directory('frontend', path)
+
 
 
 

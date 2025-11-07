@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COD Tournament</title>
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<header class="hero-section">
+    <div class="overlay"></div>
+    <h1 class="title">COD TOURNAMENT 2025</h1>
+    <p class="subtitle">Gurukul Kangri Vishwavidyalaya</p>
+    <a href="/teams" class="btn action-btn">View Teams</a>
+</header>
+
+<section class="menu-section">
+    <h2>Quick Access</h2>
+    <div class="menu-cards">
+        <a class="card" href="/teams">Teams</a>
+        <a class="card" href="/leaderboard">Leaderboard</a>
+        <a class="card" href="/winners">Hall of Fame</a>
+        <a class="card" href="/admin/login">Admin Login</a>
+    </div>
+</section>
+
+</body>
+</html>
+

@@ -1,57 +1,83 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>{{ team.team_name }} - Team Details</title>
+    <title>{{ team.team_name }} - Team</title>
     <style>
-        body { background: #000; color: #fff; text-align: center; font-family: Arial; }
-        h1 { margin-top: 30px; }
-
-        .players {
-            width: 80%; margin: auto; margin-top: 40px; border-collapse: collapse;
+        body {
+            background: #0a0a0a;
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            text-align: center;
         }
-        th, td { padding: 12px; border-bottom: 1px solid #444; }
-        img { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; }
-        
-        a.back {
-            display: inline-block; margin-top: 20px; padding: 10px 20px; text-decoration: none;
-            background: #e63946; color: white; border-radius: 5px;
+
+        h1 {
+            margin-top: 40px;
+            text-shadow: 0 0 15px #ff003c;
+        }
+
+        .player-grid {
+            width: 90%;
+            margin: auto;
+            margin-top: 40px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+        }
+
+        .player-card {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 0 18px #ff003c66;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .player-card:hover {
+            transform: scale(1.08);
+            box-shadow: 0 0 22px #ff003c;
+        }
+
+        .player-card img {
+            width: 120px;
+            height: 120px;
+            border-radius: 10px;
+            object-fit: cover;
+            border: 2px solid #ff003c;
+            box-shadow: 0 0 10px #ff003c;
+        }
+
+        .back-btn {
+            margin-top: 40px;
+            padding: 12px 28px;
+            background: #ff003c;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .back-btn:hover {
+            background: #d40032;
         }
     </style>
 </head>
 <body>
 
-<h1>{{ team.team_name }}</h1>
+<h1>🔥 TEAM: {{ team.team_name }} 🔥</h1>
 
-<table class="players">
-<tr>
-    <th>Photo</th>
-    <th>Name</th>
-    <th>COD Name</th>
-    <th>Kills</th>
-    <th>Deaths</th>
-    <th>K/D Ratio</th>
-</tr>
+<div class="player-grid">
+    {% for p in players %}
+    <div class="player-card" onclick="location.href='/player/{{ p.player_id }}'">
+        <img src="/static/player_photos/{{ p.photo if p.photo else 'default_player.png' }}">
+        <h3>{{ p.player_name }}</h3>
+        <p>🎮 {{ p.cod_name }}</p>
+        <p>KD: {{ "%.2f"|format(p.kd_ratio if p.kd_ratio else 0) }}</p>
+    </div>
+    {% endfor %}
+</div>
 
-{% for p in players %}
-<tr>
-    <td>
-        {% if p.photo %}
-            <img src="/static/player_photos/{{ p.photo }}">
-        {% else %}
-            No Photo
-        {% endif %}
-    </td>
-    <td><a href="/player/{{ p.player_id }}" style="color:#e63946; text-decoration:none;">{{ p.player_name }}</a></td>
-    <td>{{ p.cod_name }}</td>
-    <td>{{ p.kills }}</td>
-    <td>{{ p.deaths }}</td>
-    <td>{{ "%.2f"|format(p.kd_ratio) }}</td>
-</tr>
-{% endfor %}
-
-</table>
-
-<a class="back" href="/teams">⬅ Back to Teams</a>
+<button class="back-btn" onclick="location.href='/teams'">Back to Teams</button>
 
 </body>
 </html>

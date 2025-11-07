@@ -1,0 +1,96 @@
+/* Military Theme CSS */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Orbitron", sans-serif;
+    background: #0e0e0e;
+    color: #e5e5e5;
+}
+
+/* Background Hero Section */
+.hero-section {
+    height: 100vh;
+    background: url("https://i.ibb.co/Lngj0Wy/cod-bg.jpg") center/cover no-repeat;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(20, 20, 20, 0.6);
+    backdrop-filter: blur(2px);
+}
+
+/* Title */
+.title {
+    font-size: 50px;
+    font-weight: bold;
+    color: #f4b400;
+    text-shadow: 0 0 15px #f4b400;
+    position: relative;
+}
+
+.subtitle {
+    font-size: 20px;
+    color: #d6d6d6;
+    position: relative;
+    margin-bottom: 20px;
+}
+
+/* Neon Military Button */
+.action-btn {
+    padding: 12px 28px;
+    border: 2px solid #f4b400;
+    color: #f4b400;
+    font-size: 18px;
+    text-decoration: none;
+    transition: 0.3s;
+    position: relative;
+}
+.action-btn:hover {
+    background: #f4b400;
+    color: #0e0e0e;
+}
+
+/* Menu Section */
+.menu-section {
+    padding: 60px 20px;
+    background: #111110;
+    text-align: center;
+}
+
+.menu-section h2 {
+    color: #f4b400;
+    font-size: 28px;
+    margin-bottom: 30px;
+}
+
+/* Menu Cards */
+.menu-cards {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.card {
+    background: #1a1a1a;
+    padding: 20px 40px;
+    border: 2px solid #3b3b3b;
+    color: #f4b400;
+    font-size: 20px;
+    text-decoration: none;
+    transition: 0.3s;
+}
+.card:hover {
+    border-color: #f4b400;
+    box-shadow: 0 0 20px rgba(244, 180, 0, 0.7);
+}

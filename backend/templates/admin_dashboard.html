@@ -2,76 +2,103 @@
 <html>
 <head>
     <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <style>
         body {
-            font-family: Arial;
-            background: #111;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
+            font-family: 'Segoe UI', Arial, sans-serif;
             color: white;
             text-align: center;
         }
+
         h1 {
-            margin-top: 30px;
-        }
-        .container {
             margin-top: 40px;
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 20px;
+            font-size: 38px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 0 0 10px #ff003c, 0 0 20px #ff003c;
         }
-        .card {
-            background: #1e1e1e;
-            padding: 20px;
-            width: 250px;
-            border-radius: 10px;
+
+        .dashboard-container {
+            margin-top: 50px;
+            display: grid;
+            width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
+        }
+
+        .dash-card {
+            padding: 25px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid #ff003c88;
             cursor: pointer;
-            text-align: center;
-            transition: 0.3s;
-            border: 2px solid transparent;
+            transition: 0.4s;
+            backdrop-filter: blur(6px);
+            box-shadow: 0 0 12px #ff003c55;
         }
-        .card:hover {
-            border-color: #e63946;
-            transform: scale(1.05);
+
+        .dash-card:hover {
+            transform: translateY(-8px);
+            border-color: #ff003c;
+            box-shadow: 0 0 25px #ff003c;
         }
+
+        h3 {
+            font-size: 22px;
+            margin: 0;
+        }
+
         button {
-            margin-top: 30px;
-            padding: 10px 20px;
-            background: #e63946;
+            margin-top: 40px;
+            padding: 12px 25px;
+            background: #ff003c;
             border: none;
             color: white;
-            font-size: 16px;
+            font-size: 18px;
+            border-radius: 8px;
             cursor: pointer;
-            border-radius: 5px;
         }
+
         button:hover {
-            background: #b92c37;
+            background: #d60032;
         }
     </style>
 </head>
 <body>
 
 <h1>🎮 Admin Dashboard</h1>
-<p>Manage Tournament Data</p>
 
-<div class="container">
-    <div class="card" onclick="location.href='/admin/teams'">
-        <h3>Manage Teams</h3>
+<div class="dashboard-container">
+
+    <div class="dash-card" onclick="location.href='/admin/teams'">
+        <h3>👥 Manage Teams</h3>
     </div>
-    <div class="card" onclick="location.href='/admin/players'">
-        <h3>Manage Players</h3>
+
+    <div class="dash-card" onclick="location.href='/admin/players'">
+        <h3>🎮 Manage Players</h3>
     </div>
-    <div class="card" onclick="location.href='/admin/matches'">
-    <h3>Team vs Team Match Entry</h3>
-</div>
-    <div class="card" onclick="location.href='/admin/add_match'">
-    <h3>Add Match Result</h3>
+
+    <div class="dash-card" onclick="location.href='/admin/matches'">
+        <h3>⚔️ Team vs Team Match Entry</h3>
     </div>
-    <div class="card" onclick="location.href='/leaderboard'">
-    <h3>Leaderboard</h3>
-</div>
-    <div class="card" onclick="location.href='/admin/winners'">
-        <h3> Add Teams Hall of Fame (Winners)</h3>
+
+    <div class="dash-card" onclick="location.href='/admin/add_match'">
+        <h3>📊 Add Match Result</h3>
     </div>
+
+    <div class="dash-card" onclick="location.href='/leaderboard'">
+        <h3>🏆 Leaderboard</h3>
+    </div>
+
+    <div class="dash-card" onclick="location.href='/admin/winners'">
+        <h3>🥇 Hall of Fame (Winners)</h3>
+    </div>
+
 </div>
 
 <button onclick="location.href='/admin/logout'">Logout</button>

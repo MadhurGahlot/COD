@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Select MVP</title>
+    <style>
+        body { background:#111; color:white; font-family:Arial; text-align:center; }
+        .box { background:#1e1e1e; width:420px; margin:auto; margin-top:40px; padding:20px; border-radius:10px; }
+        button { background:#e63946; padding:8px 18px; border:none; border-radius:5px; color:white; cursor:pointer; }
+        button:hover { background:#b92c37; }
+    </style>
+</head>
+<body>
+
+<h1>🏆 MVP Selection Panel</h1>
+<p>System suggested top performers:</p>
+
+<form method="POST">
+<div class="box">
+    {% for p in suggestions %}
+        <label>
+            <input type="radio" name="mvp_player" value="{{ p.id }}" required>
+            <b>{{ p.player_name }}</b> ({{ p.cod_name }})  
+            <br> KD: {{ "%.2f"|format(p.kd_ratio) }} | Kills: {{ p.kills }} | Matches: {{ p.total_matches }}
+        </label>
+        <hr>
+    {% endfor %}
+</div>
+
+<br>
+<button type="submit">✅ Confirm MVP</button>
+</form>
+
+</body>
+</html>

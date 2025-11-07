@@ -1,62 +1,118 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-<head> 
-    <head>
     <title>Leaderboard</title>
     <style>
-        body { background:#111; color:white; font-family:Arial; text-align:center; }
-        table { width:85%; margin:auto; margin-top:40px; border-collapse:collapse; }
-        th, td { padding:12px; border-bottom:1px solid #444; }
-        img { width:40px; height:40px; border-radius:50%; object-fit:cover; }
-        th { background:#e63946; }
-        a { color:#e63946; text-decoration:none; }
+        body {
+            background: #0a0a0a;
+            color: white;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            text-align: center;
+        }
+
+        h1 {
+            margin-top: 30px;
+            text-shadow: 0 0 12px #ff003c;
+        }
+
+        table {
+            width: 85%;
+            margin: 40px auto;
+            border-collapse: collapse;
+            backdrop-filter: blur(6px);
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 0 15px #ff003c88;
+        }
+
+        th {
+            background: #ff003c;
+            padding: 14px;
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #333;
+        }
+
+        tr:hover {
+            background: rgba(255,0,60,0.15);
+            transition: 0.3s;
+        }
+
+        img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: 2px solid #ff003c;
+            object-fit: cover;
+        }
+
+        .mvp {
+            color: gold;
+            font-weight: bold;
+            font-size: 18px;
+            text-shadow: 0 0 8px gold;
+        }
+
+        button {
+            margin-top: 35px;
+            padding: 12px 25px;
+            background: #ff003c;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background: #d40032;
+        }
     </style>
 </head>
 <body>
 
 <h1>🏆 Leaderboard</h1>
-<p>Top players ranked by K/D Ratio</p>
+<p>Ranked by K/D Ratio</p>
 
 <table>
-<tr>
-    <th>Rank</th>
-    <th>Photo</th>
-    <th>Player</th>
-    <th>Team</th>
-    <th>Kills</th>
-    <th>Deaths</th>
-    <th>Assists</th>
-    <th>K/D Ratio</th>
-    <th>Total Matches</th>
-</tr>
+    <tr>
+        <th>Rank</th>
+        <th>Player</th>
+        <th>Team</th>
+        <th>Kills</th>
+        <th>Deaths</th>
+        <th>Assists</th>
+        <th>K/D</th>
+        <th>Matches</th>
+    </tr>
 
-{% for p in leaderboard %}
-<tr>
-    <td>{{ loop.index }}</td>
-    <td>
-        {% if p.photo %}
-            <img src="/static/player_photos/{{ p.photo }}">
-        {% else %}
-            No Photo
-        {% endif %}
-    </td>
-    <td><a href="/player/{{ p.id }}">{{ p.player_name }}</a></td>
-    <td>{{ p.team_name }}</td>
-    <td>{{ p.kills }}</td>
-    <td>{{ p.deaths }}</td>
-    <td>{{ p.assists }}</td>
-    <td>{{ "%.2f"|format(p.kd_ratio if p.kd_ratio else 0) }}</td>
-    <td>{{ p.total_matches }}</td>
-</tr>
-{% endfor %}
+    {% for p in leaderboard %}
+    <tr>
+        <td>{{ loop.index }}</td>
+        <td>
+            <img src="/static/player_photos/{{ p.photo if p.photo else 'default_player.png' }}"> 
+            <a href="/player/{{ p.id }}" style="color:white; text-decoration:none;">
+                {{ p.player_name }}
+            </a>
+
+            {% if p.is_mvp == 1 %}
+                <span class="mvp">🥇 MVP</span>
+            {% endif %}
+        </td>
+        <td>{{ p.team_name }}</td>
+        <td>{{ p.kills }}</td>
+        <td>{{ p.deaths }}</td>
+        <td>{{ p.assists }}</td>
+        <td>{{ "%.2f"|format(p.kd_ratio if p.kd_ratio else 0) }}</td>
+        <td>{{ p.total_matches }}</td>
+    </tr>
+    {% endfor %}
 </table>
 
-<br>
-<button onclick="location.href='/admin/dashboard'" style="padding:10px 20px; background:#e63946; border:none; border-radius:5px; color:white;">
-    Back to Dashboard
-</button>
+<button onclick="location.href='/admin/dashboard'">Back to Dashboard</button>
 
 </body>
 </html>
