@@ -2,12 +2,13 @@
 CREATE DATABASE IF NOT EXISTS cod_tournament;
 USE cod_tournament;
 
--- 1️ Admin table
+--1 ADMIN
 CREATE TABLE IF NOT EXISTS admin (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL,
     password VARCHAR(100) NOT NULL
 );
+
 
 -- 2️ Teams table
 CREATE TABLE IF NOT EXISTS teams (
@@ -53,6 +54,19 @@ CREATE TABLE IF NOT EXISTS matches (
 );
 
 -- 5️ Tournament Winners table
+CREATE TABLE IF NOT EXISTS matchesresult (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    player_id INT NOT NULL,
+    opponent VARCHAR(100) NOT NULL,
+    kills INT NOT NULL,
+    deaths INT NOT NULL,
+    assists INT DEFAULT 0,
+    match_date DATE NOT NULL,
+    year INT NOT NULL,
+    FOREIGN KEY (player_id) REFERENCES players(id) ON DELETE CASCADE
+);
+
+--  6 Matches result
 CREATE TABLE IF NOT EXISTS winners (
     id INT AUTO_INCREMENT PRIMARY KEY,
     year INT NOT NULL,
@@ -63,24 +77,35 @@ CREATE TABLE IF NOT EXISTS winners (
     FOREIGN KEY (runnerup_team_id) REFERENCES teams(id)
 );
 
---  6 Matches result
-CREATE TABLE IF NOT EXISTS matchesresult (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    player_id INT NOT NULL,
-    opponent VARCHAR(100) NOT NULL,
-    kills INT NOT NULL,
-    deaths INT NOT NULL,
-    assists INT DEFAULT 0,
-    match_date DATE NOT NULL,
-    FOREIGN KEY (player_id) REFERENCES players(id) ON DELETE CASCADE
+-- 7 home setting year added
+CREATE TABLE IF NOT EXISTS home_settings (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    year INT NOT NULL,
+    hero_title VARCHAR(255),
+    hero_subtitle VARCHAR(255),
+    hero_background VARCHAR(255),
+    college_logo VARCHAR(255),
+    stat_override_teams INT DEFAULT NULL,
+    stat_override_players INT DEFAULT NULL,
+    stat_override_matches INT DEFAULT NULL
 );
 
-CREATE TABLE IF NOT EXISTS winners (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+-- 8 featured palyer
+CREATE TABLE IF NOT EXISTS home_featured_players (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    player_id INT,
+    rank_number INT,
     year INT NOT NULL,
-    team_id INT,
-    notes TEXT,
-    FOREIGN KEY (team_id) REFERENCES teams(id) ON DELETE SET NULL
+    FOREIGN KEY (player_id) REFERENCES players(id)
 );
+
+CREATE TABLE IF NOT EXISTS home_highlights (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    image VARCHAR(255),
+    title VARCHAR(255),
+    description TEXT,
+    year INT NOT NULL
+);
+
 
 

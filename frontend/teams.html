@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Teams — COD CHAMPIONS CUP</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-left"><img src="/static/logo.png" class="logo"><span class="brand">COD CHAMPIONS CUP</span></div>
+    <div class="nav-right"><a href="/">Home</a></div>
+  </nav>
+
+  <main style="padding-top:100px">
+    <section class="section">
+      <div class="container">
+        <h2 class="section-title">Teams</h2>
+        <div id="teams-grid" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:18px;">
+          <!-- Use Flask to generate team cards server-side or JS to fetch /api/teams -->
+          <!-- Example static card -->
+          <div class="highlight-card">
+            <h3>Team Alpha</h3><p>Members: 5 • Wins: 4</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script src="/static/script.js"></script>
+</body>
+</html>

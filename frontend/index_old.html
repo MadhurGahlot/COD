@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>COD CHAMPIONS CUP — GKV 2025</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-left">
+      <img src="/static/logo.jpg" alt="logo" class="logo">
+      <span class="brand">COD CHAMPIONS CUP — GKV 2025</span>
+    </div>
+    <div class="nav-right">
+      <a href="/" class="nav-link">Home</a>
+      <a href="/teams" class="nav-link">Teams</a>
+      <a href="/leaderboard" class="nav-link">Leaderboard</a>
+      <a href="/matches" class="nav-link">Matches</a>
+      <a href="/winners" class="nav-link">Winners</a>
+      <a href="/admin/login" class="nav-cta">Admin</a>
+    </div>
+  </nav>
+
+  <!-- HERO with parallax background -->
+  <header class="hero" id="hero">
+    <div class="hero-inner">
+      <h1 class="hero-title">COD CHAMPIONS CUP</h1>
+      <p class="hero-sub">Gurukula Kangri Vishwavidyalaya — 2025</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="/teams">View Teams</a>
+        <a class="btn btn-ghost" href="/matches">Live Matches</a>
+      </div>
+    </div>
+    <div class="hero-overlay"></div>
+  </header>
+
+  <!-- ABOUT -->
+  <section class="section about">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-text">
+          <h2>About the Event</h2>
+          <p>COD CHAMPIONS CUP is the annual Call of Duty inter-college tournament hosted by GKV. Teams from across the campus battle in multiple modes. This platform tracks teams, player stats, live matches, and history.</p>
+        </div>
+        <div class="about-cards">
+          <div class="stat-card"><strong id="stat-teams">—</strong><span>Teams</span></div>
+          <div class="stat-card"><strong id="stat-players">—</strong><span>Players</span></div>
+          <div class="stat-card"><strong id="stat-matches">—</strong><span>Matches</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HIGHLIGHTS -->
+  <section class="section highlights">
+    <div class="container">
+      <h2 class="section-title">Latest Highlights</h2>
+      <div class="highlights-grid" id="highlights">
+        <!-- filled by script.js (sample cards) -->
+      </div>
+    </div>
+  </section>
+
+  <!-- LIVE / UPCOMING MATCHES -->
+  <section class="section live">
+    <div class="container">
+      <h2 class="section-title">Live / Upcoming Matches</h2>
+      <div class="matches-wrap" id="matches-preview">
+        <!-- populated by script.js -->
+      </div>
+      <div class="center">
+        <a href="/matches" class="btn btn-primary">See all matches</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- LEADERBOARD PREVIEW -->
+  <section class="section leaderboard-preview">
+    <div class="container">
+      <h2 class="section-title">Top Players</h2>
+      <div id="leaderboard-preview" class="leaderboard-grid">
+        <!-- by script.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- PRIZES -->
+  <section class="section prizes">
+    <div class="container">
+      <h2 class="section-title">Prize Pool</h2>
+      <div class="prize-grid">
+        <div class="prize large">🏆 Champion<br><strong>₹10,000</strong></div>
+        <div class="prize">🥈 Runner-up<br><strong>₹5,000</strong></div>
+        <div class="prize">🥉 3rd Place<br><strong>₹2,000</strong></div>
+        <div class="prize">🎖️ MVP<br><strong>Special</strong></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div>
+        <img src="/static/logo.jpg" alt="logo" class="logo small">
+        <p>COD CHAMPIONS CUP — GKV 2025 • Gurukula Kangri Vishwavidyalaya</p>
+      </div>
+      <div>
+        <h4>Links</h4>
+        <a href="/teams">Teams</a><br>
+        <a href="/leaderboard">Leaderboard</a><br>
+        <a href="/matches">Matches</a>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <p>Email: esports@gkv.ac.in</p>
+      </div>
+    </div>
+    <div class="center smalltext">© 2025 COD CHAMPIONS CUP — GKV</div>
+  </footer>
+
+  <script src="/static/script.js"></script>
+</body>
+</html>

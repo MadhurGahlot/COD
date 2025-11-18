@@ -1,82 +1,30 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
 <head>
-    <title>Teams</title>
-    <style>
-        body {
-            background: #0a0a0a;
-            color: white;
-            font-family: 'Segoe UI', sans-serif;
-            text-align: center;
-        }
-
-        h1 {
-            margin-top: 40px;
-            text-shadow: 0 0 15px #ff003c;
-        }
-
-        .teams-grid {
-            width: 90%;
-            margin: auto;
-            margin-top: 40px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 30px;
-        }
-
-        .team-card {
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 0 18px #ff003c66;
-            transition: 0.3s;
-            cursor: pointer;
-        }
-
-        .team-card:hover {
-            transform: scale(1.08);
-            box-shadow: 0 0 22px #ff003c;
-        }
-
-        .team-card img {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid #ff003c;
-            box-shadow: 0 0 10px #ff003c;
-            margin-bottom: 15px;
-        }
-
-        .back-btn {
-            margin-top: 40px;
-            padding: 12px 28px;
-            background: #ff003c;
-            border: none;
-            border-radius: 8px;
-            color: white;
-            cursor: pointer;
-        }
-
-        .back-btn:hover {
-            background: #d40032;
-        }
-    </style>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Teams — COD CHAMPIONS CUP</title>
+  <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
+  <nav class="nav">
+    <div class="nav-left"><img src="/static/logo.png" class="logo"><span class="brand">COD CHAMPIONS CUP</span></div>
+    <div class="nav-right"><a href="/">Home</a></div>
+  </nav>
 
-<h1>🔥 Teams List 🔥</h1>
-
-<div class="teams-grid">
-    {% for team in teams %}
-    <div class="team-card" onclick="location.href='/team/{{ team.team_id }}'">
-        <img src="/static/team_logos/{{ team.team_logo if team.team_logo else 'default_team.png' }}">
-        <h2>{{ team.team_name }}</h2>
-    </div>
-    {% endfor %}
-</div>
-
-<button class="back-btn" onclick="location.href='/admin/dashboard'">Back to Dashboard</button>
-
+  <main style="padding-top:100px">
+    <section class="section">
+      <div class="container">
+        <h2 class="section-title">Teams</h2>
+        <div id="teams-grid" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:18px;">
+          <!-- Use Flask to generate team cards server-side or JS to fetch /api/teams -->
+          <!-- Example static card -->
+          <div class="highlight-card">
+            <h3>Team Alpha</h3><p>Members: 5 • Wins: 4</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script src="/static/script.js"></script>
 </body>
 </html>

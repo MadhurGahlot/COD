@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin • Home Page Settings</title>
+    <link rel="stylesheet" href="/static/style.css">
+
+    <style>
+        .admin-container {
+            width: 90%;
+            margin: auto;
+            margin-top: 30px;
+        }
+        h2 {
+            margin-top: 25px;
+            margin-bottom: 10px;
+            border-left: 5px solid #004080;
+            padding-left: 10px;
+        }
+        form input, form select, form textarea {
+            padding: 8px;
+            margin: 5px 0;
+            width: 100%;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .btn {
+            padding: 8px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        .btn-primary {
+            background: #004080;
+            color: white;
+            margin-top: 10px;
+        }
+        .btn-danger {
+            background: #d9534f;
+            color: white;
+        }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+        .table th, .table td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            background: white;
+        }
+        img.preview {
+            width: 200px;
+            border-radius: 6px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- ADMIN NAVBAR -->
+<nav class="nav">
+    <div class="nav-left">
+        <span class="brand">Admin Panel</span>
+    </div>
+
+    <div class="nav-right">
+
+        <!-- YEAR SWITCHER -->
+        <form action="/admin/set_year" method="POST" style="display:inline-block; margin-right:15px;">
+            <select name="year" onchange="this.form.submit()" 
+                    style="padding:6px; border-radius:5px; font-size:15px;">
+                {% for y in range(2024, 2032) %}
+                    <option value="{{ y }}" {% if session['selected_year'] == y %}selected{% endif %}>
+                        {{ y }}
+                    </option>
+                {% endfor %}
+            </select>
+        </form>
+
+        <a href="/admin/dashboard">Dashboard</a>
+        <a href="/admin/teams">Teams</a>
+        <a href="/admin/players">Players</a>
+        <a href="/admin/matches">Matches</a>
+        <a href="/admin/winners">Winners</a>
+        <a href="/admin/home_settings">Home Settings</a>
+        <a href="/admin/logout">Logout</a>
+    </div>
+</nav>
+
+<div class="admin-container">
+
+    <h1>🏠 Home Page Settings</h1>
+    <hr>
+
+    <!-- HERO SECTION SETTINGS -->
+    <h2>🎯 Hero Section</h2>
+    <form method="POST" enctype="multipart/form-data">
+
+        <label><strong>Hero Title</strong></label>
+        <input type="text" name="hero_title"
+               value="{{ settings.hero_title if settings else '' }}" required>
+
+        <label><strong>Hero Subtitle</strong></label>
+        <input type="text" name="hero_subtitle"
+               value="{{ settings.hero_subtitle if settings else '' }}" required>
+
+        <br><br>
+
+        <!-- UPLOAD HERO BACKGROUND -->
+        <label><strong>Upload Hero Background Image</strong></label>
+        <input type="file" name="hero_background">
+
+        {% if settings and settings.hero_background %}
+            <p>Current Background:</p>
+            <img src="/static/{{ settings.hero_background }}" class="preview">
+        {% endif %}
+
+        <br><br>
+
+        <!-- UPLOAD COLLEGE LOGO -->
+        <label><strong>Upload College Logo</strong></label>
+        <input type="file" name="college_logo">
+
+        {% if settings and settings.college_logo %}
+            <p>Current Logo:</p>
+            <img src="/static/{{ settings.college_logo }}" class="preview" style="width:120px;">
+        {% endif %}
+
+        <button class="btn btn-primary">Save Hero + Logo Settings</button>
+    </form>
+
+    <hr>
+
+    <!-- FEATURED TOP PLAYERS -->
+    <h2>⭐ Featured Top Players (Rank 1 → 5)</h2>
+
+    {% if featured_players %}
+    <table class="table">
+        <tr>
+            <th>Rank</th>
+            <th>Player Name</th>
+            <th>Action</th>
+        </tr>
+
+        {% for fp in featured_players %}
+        <tr>
+            <td>{{ fp.rank_number }}</td>
+            <td>{{ fp.player_name }}</td>
+            <td>
+                <a href="/admin/home_featured_player_delete/{{ fp.id }}" class="btn btn-danger">
+                    Delete
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+        <p>No featured players added yet.</p>
+    {% endif %}
+
+    <h3>Add Featured Player</h3>
+    <form action="/admin/home_featured_player_add" method="POST">
+        <label><strong>Rank Number (1–5)</strong></label>
+        <select name="rank_number" required>
+            <option value="">Select Rank</option>
+            {% for i in [1,2,3,4,5] %}
+            <option value="{{ i }}">{{ i }}</option>
+            {% endfor %}
+        </select>
+
+        <label><strong>Select Player</strong></label>
+        <select name="player_id" required>
+            <option value="">Select Player</option>
+            {% for p in players %}
+            <option value="{{ p.id }}">{{ p.player_name }}</option>
+            {% endfor %}
+        </select>
+
+        <button class="btn btn-primary">Add Featured Player</button>
+    </form>
+
+    <hr>
+
+    <!-- HIGHLIGHTS SECTION -->
+    <h2>🔥 Event Highlights</h2>
+
+    {% if highlights %}
+    <table class="table">
+        <tr>
+            <th>Image</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Action</th>
+        </tr>
+
+        {% for h in highlights %}
+        <tr>
+            <td><img src="/static/{{ h.image }}" width="90"></td>
+            <td>{{ h.title }}</td>
+            <td>{{ h.description[:60] }}...</td>
+            <td>
+                <a href="/admin/home_highlight_delete/{{ h.id }}" class="btn btn-danger">
+                    Delete
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+        <p>No highlights added.</p>
+    {% endif %}
+
+    <h3>Add New Highlight</h3>
+    <form action="/admin/home_highlight_add" method="POST" enctype="multipart/form-data">
+
+        <label><strong>Highlight Title</strong></label>
+        <input type="text" name="title" required>
+
+        <label><strong>Description</strong></label>
+        <textarea name="description" rows="3" required></textarea>
+
+        <label><strong>Upload Image</strong></label>
+        <input type="file" name="image" required>
+
+        <button class="btn btn-primary">Add Highlight</button>
+    </form>
+
+</div>
+
+</body>
+</html>

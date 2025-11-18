@@ -74,6 +74,20 @@
 </head>
 <body>
 
+<div style="width:100%; background:#0d1b2a; padding:10px 20px; display:flex; justify-content:flex-end;">
+    <form action="/set_year" method="POST">
+        <select name="year" onchange="this.form.submit()"
+                style="padding:6px; border-radius:5px; font-size:15px;">
+            {% for y in range(2023, 2032) %}
+            <option value="{{ y }}" {% if session.get('selected_year') == y %}selected{% endif %}>
+                {{ y }}
+            </option>
+            {% endfor %}
+        </select>
+    </form>
+</div>
+
+
 <h1>🏆 Leaderboard</h1>
 <p>Ranked by K/D Ratio</p>
 
@@ -112,7 +126,7 @@
     {% endfor %}
 </table>
 
-<button onclick="location.href='/admin/dashboard'">Back to Dashboard</button>
+<a href="/" class="back-btn">⬅ Back to Home</a>
 
 </body>
 </html>
