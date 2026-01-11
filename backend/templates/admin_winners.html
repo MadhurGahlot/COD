@@ -1,23 +1,151 @@
-<form method="POST" enctype="multipart/form-data">
-    <input type="number" name="year" placeholder="Tournament Year" required>
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <select name="winner_team_id" required>
-        <option value="">Select Winner Team</option>
-        {% for t in teams %}
-        <option value="{{ t.id }}">{{ t.team_name }}</option>
-        {% endfor %}
-    </select>
+    <title>Add Tournament Winner — Admin</title>
 
-    <select name="runnerup_team_id" required>
-        <option value="">Select Runner-Up Team</option>
-        {% for t in teams %}
-        <option value="{{ t.id }}">{{ t.team_name }}</option>
-        {% endfor %}
-    </select>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
-    <label>Winner Photo:</label>
-    <input type="file" name="winner_photo">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
 
-    <button type="submit">Save</button>
-</form>
+    <style type="text/tailwindcss">
+        @theme {
+            --font-sans: 'Inter', sans-serif;
+            --font-display: 'Oswald', sans-serif;
+        }
 
+        body {
+            @apply bg-slate-950 text-slate-200 font-sans antialiased min-h-screen;
+            background-image: radial-gradient(circle at 50% 0%, #1e1b4b 0%, #020617 70%);
+        }
+
+        h1 {
+            @apply font-display uppercase tracking-wider;
+        }
+
+        input, select {
+            @apply bg-slate-900 border border-white/10 rounded-xl px-4 py-3
+                   text-slate-200 focus:outline-none focus:border-indigo-500;
+        }
+
+        label {
+            @apply text-slate-400 text-sm font-semibold;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="w-full flex items-center gap-4 px-6 py-4
+            border-b border-white/5 bg-slate-950/60 backdrop-blur-md
+            sticky top-0 z-50">
+
+    <a href="/admin/dashboard"
+       class="p-2 rounded-full bg-slate-800 text-slate-400
+              hover:bg-indigo-600 hover:text-white transition">
+        ←
+    </a>
+
+    <span class="font-display font-bold text-white text-lg">
+        Add Tournament Winner
+    </span>
+</nav>
+
+<!-- FORM -->
+<section class="max-w-3xl mx-auto px-6 py-20">
+
+    <div class="bg-slate-900/50 backdrop-blur-xl border border-white/5
+                rounded-3xl p-8 shadow-2xl">
+
+        <h1 class="text-3xl font-black text-white mb-8 text-center">
+            Hall of Fame Entry
+        </h1>
+
+        <form method="POST" enctype="multipart/form-data" class="space-y-6">
+
+            <!-- YEAR -->
+            <div>
+                <label>Tournament Year</label>
+                <input type="number" name="year" placeholder="2025" required>
+            </div>
+
+            <!-- WINNER TEAM -->
+            <div>
+                <label>Winner Team</label>
+                <select name="winner_team_id" required>
+                    <option value="">Select Winner Team</option>
+                    {% for t in teams %}
+                    <option value="{{ t.id }}">{{ t.team_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- RUNNER-UP TEAM -->
+            <div>
+                <label>Runner-Up Team</label>
+                <select name="runnerup_team_id" required>
+                    <option value="">Select Runner-Up Team</option>
+                    {% for t in teams %}
+                    <option value="{{ t.id }}">{{ t.team_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- FINAL SCORE -->
+            <div>
+                <label>Final Match Score</label>
+                <input type="text" name="final_score" placeholder="3 - 1">
+            </div>
+
+            <!-- MVP -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label>MVP Name</label>
+                    <input type="text" name="mvp_name" placeholder="Player Name">
+                </div>
+
+                <div>
+                    <label>MVP Photo</label>
+                    <input type="file" name="mvp_photo"
+                           class="file:bg-indigo-600 file:text-white
+                                  file:border-0 file:px-4 file:py-2
+                                  file:rounded-lg file:cursor-pointer">
+                </div>
+            </div>
+
+            <!-- WINNER PHOTO -->
+            <div>
+                <label>Winner Team Photo</label>
+                <input type="file" name="winner_photo"
+                       class="file:bg-yellow-500 file:text-black
+                              file:border-0 file:px-4 file:py-2
+                              file:rounded-lg file:cursor-pointer">
+            </div>
+
+            <!-- SUBMIT -->
+            <div class="pt-6 flex justify-center">
+                <button type="submit"
+                        class="px-10 py-3 rounded-xl bg-indigo-600
+                               hover:bg-indigo-500 text-white
+                               font-bold shadow-xl transition">
+                    Save Winner
+                </button>
+            </div>
+
+        </form>
+    </div>
+
+</section>
+
+<!-- FOOTER -->
+<footer class="border-t border-white/5 bg-slate-950 py-10 text-center text-slate-500">
+    © 2025 COD Champions Cup — Admin Panel
+</footer>
+
+</body>
+</html>

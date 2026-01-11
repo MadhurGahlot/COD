@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}COD Champions Cup{% endblock %}</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+
+    <style type="text/tailwindcss">
+        @theme {
+            --font-sans: 'Inter', sans-serif;
+            --font-display: 'Oswald', sans-serif;
+            --color-brand: #6366f1;
+        }
+
+        body {
+            @apply bg-slate-950 text-slate-200 font-sans antialiased min-h-screen flex flex-col;
+            background-image: radial-gradient(circle at 50% 0%, #1e1b4b 0%, #020617 70%);
+        }
+
+        h1 {
+            @apply font-display uppercase tracking-wider;
+        }
+
+        .scrollbar-custom::-webkit-scrollbar { height: 8px; }
+        .scrollbar-custom::-webkit-scrollbar-track { background: #0f172a; }
+        .scrollbar-custom::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        .scrollbar-custom::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+    </style>
+</head>
+
+<body>
+
+{% include "components/navbar.html" %}
+
+<main class="flex-grow container mx-auto px-4 py-12">
+    {% block content %}{% endblock %}
+</main>
+
+{% include "components/footer.html" %}
+
+</body>
+</html>

@@ -1,37 +1,171 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" class="scroll-smooth">
 <head>
-<title>Add Match Result</title>
-<style>
-body { background:#111; color:#fff; font-family:Arial; text-align:center; }
-form { margin-top:40px; }
-input, select {
-    padding:10px; width:250px; margin:5px; border:none; border-radius:5px;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Match Manager</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+
+<style type="text/tailwindcss">
+@theme {
+    --font-sans:'Inter',sans-serif;
+    --font-display:'Oswald',sans-serif;
 }
-button { padding:10px 25px; background:#e63946; border:none; color:white; cursor:pointer; border-radius:5px; }
+body {
+    @apply bg-slate-950 text-slate-200 font-sans min-h-screen;
+    background-image: radial-gradient(circle at 50% 0%, #1e1b4b 0%, #020617 70%);
+}
+input,select {
+    @apply bg-slate-900 border border-white/10 rounded-xl px-4 py-3
+           text-slate-200 focus:outline-none focus:border-indigo-500;
+}
+label {
+    @apply text-slate-400 text-sm font-semibold;
+}
 </style>
 </head>
+
 <body>
 
-<h1>Add Match Result</h1>
+<!-- NAVBAR -->
+<nav class="flex items-center gap-4 px-6 py-4 border-b border-white/5 bg-slate-950/60 backdrop-blur-md">
+    <a href="/admin/dashboard"
+       class="p-2 rounded-full bg-slate-800 hover:bg-indigo-600 transition">←</a>
+    <span class="font-display font-bold text-white text-lg">Match Manager</span>
+</nav>
 
-<form action="/admin/add_match" method="POST">
-
-<select name="player_id" required>
-    <option selected disabled>Select Player</option>
-    {% for p in players %}
-        <option value="{{ p.id }}">{{ p.player_name }}</option>
-    {% endfor %}
-</select>
-
-<input type="text" name="opponent" placeholder="Opponent Team Name" required>
-<input type="number" name="kills" placeholder="Kills" required>
-<input type="number" name="deaths" placeholder="Deaths" required>
-<input type="number" name="assists" placeholder="Assists">
-<input type="date" name="match_date" required>
-
-<button type="submit">Submit Match Result</button>
+<!-- YEAR FILTER -->
+<section class="max-w-7xl mx-auto px-6 py-8">
+<form method="GET" class="flex gap-4">
+    <select name="year" onchange="this.form.submit()">
+        {% for y in range(2023, 2032) %}
+        <option value="{{ y }}" {% if y == selected_year %}selected{% endif %}>
+            {{ y }} Season
+        </option>
+        {% endfor %}
+    </select>
 </form>
+</section>
+
+<!-- ADD / BULK ADD -->
+<section class="max-w-5xl mx-auto px-6 pb-16">
+<div class="bg-slate-900/50 rounded-3xl p-8 shadow-2xl">
+
+<h2 class="font-display text-3xl mb-6">Add Match Result</h2>
+
+<form method="POST" action="/admin/add_match" class="space-y-6">
+
+<!-- BULK MODE -->
+<label class="flex items-center gap-2">
+<input type="checkbox" name="bulk"> Bulk Entry Mode
+</label>
+
+<!-- PLAYER -->
+<div>
+<label>Player</label>
+<select name="player_id" required>
+<option disabled selected>Select Player</option>
+{% for p in players %}
+<option value="{{ p.id }}">{{ p.player_name }}</option>
+{% endfor %}
+</select>
+</div>
+
+<!-- MVP -->
+<div>
+<label>Match MVP</label>
+<select name="mvp_player_id">
+<option value="">None</option>
+{% for p in players %}
+<option value="{{ p.id }}">{{ p.player_name }}</option>
+{% endfor %}
+</select>
+</div>
+
+<!-- OPPONENT -->
+<div>
+<label>Opponent Team</label>
+<input name="opponent" required>
+</div>
+
+<!-- STATS -->
+<div class="grid grid-cols-3 gap-4">
+<div><label>Kills</label><input name="kills" type="number" required></div>
+<div><label>Deaths</label><input name="deaths" type="number" required></div>
+<div><label>Assists</label><input name="assists" type="number"></div>
+</div>
+
+<!-- DATE -->
+<div>
+<label>Match Date</label>
+<input type="date" name="match_date" required>
+</div>
+
+<button class="w-full py-3 bg-indigo-600 rounded-xl font-bold hover:bg-indigo-500 transition">
+Save Match
+</button>
+
+</form>
+</div>
+</section>
+
+<!-- MATCH TABLE -->
+<section class="max-w-7xl mx-auto px-6 pb-24">
+<div class="overflow-x-auto bg-slate-900/40 rounded-3xl shadow-2xl">
+
+<table class="w-full text-left">
+<thead class="bg-slate-900 text-slate-400 uppercase text-xs">
+<tr>
+<th class="p-4">Player</th>
+<th>K/D</th>
+<th>Opponent</th>
+<th>Score</th>
+<th>MVP</th>
+<th>Date</th>
+<th>Actions</th>
+</tr>
+</thead>
+
+<tbody class="divide-y divide-white/5">
+{% for m in matches %}
+<tr class="hover:bg-white/5">
+
+<td class="p-4">{{ m.player_name }}</td>
+<td class="text-indigo-400 font-bold">
+{{ "%.2f"|format(m.kd_ratio) }}
+</td>
+<td>{{ m.opponent }}</td>
+<td>{{ m.kills }}/{{ m.deaths }}/{{ m.assists }}</td>
+<td>
+{% if m.mvp_name %}
+<span class="text-yellow-400 font-semibold">🏆 {{ m.mvp_name }}</span>
+{% else %}-{% endif %}
+</td>
+<td>{{ m.match_date }}</td>
+
+<td class="flex gap-2 p-4">
+<a href="/admin/edit_match/{{ m.id }}"
+   class="px-3 py-1 bg-slate-800 rounded hover:bg-indigo-600">Edit</a>
+
+<form method="POST" action="/admin/delete_match/{{ m.id }}"
+      onsubmit="return confirm('Delete match?')">
+<button class="px-3 py-1 bg-rose-600 rounded hover:bg-rose-500">Delete</button>
+</form>
+</td>
+
+</tr>
+{% endfor %}
+</tbody>
+</table>
+
+</div>
+</section>
+
+<footer class="border-t border-white/5 bg-slate-950 py-8 text-center text-slate-500">
+© 2025 COD Champions Cup — Admin
+</footer>
 
 </body>
 </html>

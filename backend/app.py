@@ -81,15 +81,15 @@ def homepage():
     )
 
 # -------- SERVE OTHER FRONTEND FILES (HTML, JS, images) ----------
-@app.route("/frontend/<path:filename>")
-def serve_frontend(filename):
-    return send_from_directory("../frontend", filename)
+#@app.route("/frontend/<path:filename>")
+#def serve_frontend(filename):
+  #  return send_from_directory("../frontend", filename)
 
 # -------- STATIC FILES (CSS, JS, IMAGES) ----------
 # Note: Flask by default serves /static/, but we keep this route consistent
-@app.route("/static/<path:filename>")
-def serve_static_files(filename):
-    return send_from_directory(os.path.join(app.root_path, "static"), filename)
+#@app.route("/static/<path:filename>")
+#def serve_static_files(filename):
+ #   return send_from_directory(os.path.join(app.root_path, "static"), filename)
 
 # -------------------- ADMIN LOGIN --------------------
 @app.route("/admin/login", methods=["GET", "POST"])
@@ -409,19 +409,25 @@ def leaderboard():
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
-    # Use year filter
+    # UPDATED QUERY:
+    # 1. Sorts by K/D Ratio
+    # 2. Tie-breaker: Higher Kills
+    # 3. Tie-breaker: Lower Deaths (Skill check)
+    # 4. Tie-breaker: More Matches Played (Dedication check)
     cursor.execute("""
         SELECT players.*, teams.team_name 
         FROM players
         LEFT JOIN teams ON players.team_id = teams.id AND teams.year = players.year
         WHERE players.year = %s
-        ORDER BY kd_ratio DESC
+        ORDER BY kd_ratio DESC, kills DESC, deaths ASC, total_matches DESC
     """, (get_selected_year(),))
 
     leaderboard = cursor.fetchall()
     conn.close()
 
-    # MVP is the top player in KD ratio for the year
+    # We don't actually need to pass 'mvp' separately because 
+    # the HTML loops through 'leaderboard' and checks 'p.is_mvp'
+    # but we can keep it if you want to display the MVP in a hero section later.
     mvp = leaderboard[0] if leaderboard else None
 
     return render_template("leaderboard.html", leaderboard=leaderboard, mvp=mvp)
