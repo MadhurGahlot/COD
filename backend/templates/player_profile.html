@@ -1,101 +1,212 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>{{ player.player_name }} - Profile</title>
-    <style>
-        body {
-            background: #0a0a0a;
-            color: white;
-            font-family: 'Segoe UI', sans-serif;
-            text-align: center;
-        }
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-6xl mx-auto">
+    <!-- Header: Identity Card -->
+    <div
+        class="bg-slate-900 border border-slate-800 rounded-[3.5rem] p-12 mb-12 shadow-2xl relative overflow-hidden group">
+        <div
+            class="absolute inset-0 bg-gradient-to-r from-brand/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+        </div>
 
-        .profile-card {
-            width: 450px;
-            margin: 60px auto;
-            padding: 25px;
-            background: rgba(255,255,255,0.08);
-            backdrop-filter: blur(6px);
-            border-radius: 14px;
-            box-shadow: 0 0 18px #ff003c77;
-            text-align: center;
-        }
+        <div class="flex flex-col lg:flex-row items-center gap-12 relative z-10">
+            <!-- Profile Photo -->
+            <div class="relative">
+                <div
+                    class="w-48 h-48 md:w-64 md:h-64 rounded-[2.5rem] overflow-hidden border-4 border-slate-950 shadow-2xl relative z-10">
+                    <img src="{{ url_for('static', filename='player_photos/' + player.photo if player.photo else 'default_player.png') }}"
+                        class="w-full h-full object-cover">
+                </div>
+                <div class="absolute -inset-4 bg-brand/20 blur-2xl rounded-full animate-pulse z-0"></div>
+                {% if mvp and mvp.id == player.id %}
+                <div
+                    class="absolute -top-4 -left-4 bg-yellow-500 text-slate-950 p-2 rounded-2xl shadow-xl rotate-[-15deg] font-black uppercase text-xs tracking-tighter z-20">
+                    Top MVP
+                </div>
+                {% endif %}
+            </div>
 
-        .profile-card img {
-            width: 150px;
-            height: 150px;
-            border-radius: 12px;
-            object-fit: cover;
-            border: 3px solid #ff003c;
-            box-shadow: 0 0 12px #ff003c;
-        }
+            <!-- Identity Intel -->
+            <div class="flex-grow text-center lg:text-left">
+                <div
+                    class="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-slate-950 border border-slate-800 text-slate-500 text-[10px] font-black uppercase tracking-widest mb-6">
+                    <span class="w-1.5 h-1.5 rounded-full bg-brand animate-ping"></span>
+                    Player Confirmed
+                </div>
+                <h1 class="text-5xl md:text-7xl font-black text-white mb-2">{{ player.player_name }}</h1>
+                <p class="text-brand font-display text-2xl uppercase tracking-tighter mb-8">{{ player.cod_name }}</p>
 
-        h2 {
-            margin-top: 12px;
-            text-shadow: 0 0 10px #ff003c;
-        }
+                <div class="flex flex-wrap justify-center lg:justify-start gap-6">
+                    <div class="flex flex-col">
+                        <span class="text-[10px] text-slate-500 uppercase font-black mb-1">Affiliation</span>
+                        <span class="text-xl font-bold text-white">{{ player.team_name if player.team_name else 'FREE
+                            AGENT' }}</span>
+                    </div>
+                    <div class="w-px h-12 bg-slate-800 hidden md:block"></div>
+                    <div class="flex flex-col">
+                        <span class="text-[10px] text-slate-500 uppercase font-black mb-1">Global K/D</span>
+                        <span class="text-xl font-bold text-brand">{{ "%.2f"|format(p_kd) }}</span>
+                    </div>
+                    <div class="w-px h-12 bg-slate-800 hidden md:block"></div>
+                    <div class="flex flex-col">
+                        <span class="text-[10px] text-slate-500 uppercase font-black mb-1">Matches Played</span>
+                        <span class="text-xl font-bold text-white">{{ player.total_matches }} Matches</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        .mvp-badge {
-            color: gold;
-            text-shadow: 0 0 12px gold;
-            font-weight: bold;
-            font-size: 24px;
-        }
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+        <!-- Left: Records & Bio -->
+        <div class="space-y-12">
+            <!-- Achievements -->
+            <div class="bg-slate-900 border border-slate-800 rounded-[3rem] p-10 shadow-xl">
+                <h3 class="text-xl font-black mb-8 uppercase tracking-widest text-slate-400">Honors & Records</h3>
+                <div class="space-y-6">
+                    {% if team_wins > 0 %}
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="w-12 h-12 bg-yellow-500/10 rounded-2xl flex items-center justify-center text-yellow-500">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-white font-bold">{{ team_wins }} Tournament Win{{ 's' if team_wins > 1 }}</p>
+                            <p class="text-[10px] text-slate-500 uppercase font-bold">Championship Records</p>
+                        </div>
+                    </div>
+                    {% endif %}
 
-        table {
-            margin: 20px auto;
-            border-collapse: collapse;
-        }
+                    {% if mvp_awards > 0 %}
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-brand/10 rounded-2xl flex items-center justify-center text-brand">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-white font-bold">{{ mvp_awards }} MVP Award{{ 's' if mvp_awards > 1 }}</p>
+                            <p class="text-[10px] text-slate-500 uppercase font-bold">Individual Excellence</p>
+                        </div>
+                    </div>
+                    {% endif %}
 
-        td {
-            padding: 6px 14px;
-            border-bottom: 1px solid #333;
-        }
+                    {% if not team_wins and not mvp_awards %}
+                    <p class="text-slate-600 italic text-sm">No major honors recorded yet.</p>
+                    {% endif %}
+                </div>
+            </div>
 
-        button {
-            margin-top: 25px;
-            padding: 12px 28px;
-            background: #ff003c;
-            border: none;
-            border-radius: 8px;
-            color: white;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        button:hover {
-            background: #d40032;
-        }
+            <!-- Bio -->
+            <div class="bg-slate-900 border border-slate-800 rounded-[3rem] p-10 shadow-xl">
+                <h3 class="text-xl font-black mb-6 uppercase tracking-widest text-slate-400">Background</h3>
+                <p class="text-slate-400 leading-relaxed italic text-sm">
+                    {{ player.bio if player.bio else "Player profile private. No biographical data available." }}
+                </p>
+            </div>
+        </div>
 
-    </style>
-</head>
-<body>
+        <!-- Right: Aggregated Stats & Head-to-Head -->
+        <div class="lg:col-span-2 space-y-12">
+            <!-- Cumulative Stats Split -->
+            <div class="bg-slate-900 border border-slate-800 rounded-[3.5rem] p-1 shadow-xl">
+                <div class="bg-slate-950 rounded-[3.3rem] p-10 grid grid-cols-2 md:grid-cols-4 gap-8">
+                    <div class="text-center">
+                        <p class="text-[10px] text-slate-500 uppercase font-bold mb-2">Total Kills</p>
+                        <p class="text-3xl font-display font-black text-white">{{ player.kills }}</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-[10px] text-slate-500 uppercase font-bold mb-2">Total Deaths</p>
+                        <p class="text-3xl font-display font-black text-white">{{ player.deaths }}</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-[10px] text-slate-500 uppercase font-bold mb-2">Assists</p>
+                        <p class="text-3xl font-display font-black text-blue-400">{{ player.assists }}</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-[10px] text-slate-500 uppercase font-bold mb-2">Econ Rate</p>
+                        <p class="text-3xl font-display font-black text-brand">{{ "%.2f"|format(player.kills /
+                            player.total_matches if player.total_matches > 0 else 0) }}</p>
+                    </div>
+                </div>
+            </div>
 
-<h1>🎮 Player Profile</h1>
+            <!-- Performance Analytics: K/D Evolution -->
+            <div class="bg-slate-900 border border-slate-800 rounded-[3.5rem] p-10 shadow-2xl">
+                <h3 class="text-xl font-black uppercase tracking-widest mb-8">Player Performance <span
+                        class="text-brand">Trend</span></h3>
+                <div class="h-64 md:h-80 w-full">
+                    <canvas id="kdChart"></canvas>
+                </div>
+            </div>
 
-<div class="profile-card">
-    <img src="/static/player_photos/{{ player.photo if player.photo else 'default_player.png' }}">
+            <!-- Head-to-Head: Stats by Opponent -->
+            <div class="bg-slate-900 border border-slate-800 rounded-[3.5rem] overflow-hidden shadow-2xl">
+                <div class="px-10 py-8 border-b border-slate-800 bg-slate-950/50 flex items-center justify-between">
+                    <h3 class="text-xl font-black uppercase tracking-widest">Tactical Splits <span
+                            class="text-brand text-xs font-mono ml-2">Vs Opponents</span></h3>
+                    <div class="p-2 bg-brand/10 rounded-lg">
+                        <svg class="w-5 h-5 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                </div>
 
-    <h2>
-        {{ player.player_name }} ({{ player.cod_name }})
-        {% if mvp and mvp.id == player.id %}
-        <span class="mvp-badge">🥇 MVP</span>
-        {% endif %}
-    </h2>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr
+                                class="bg-slate-950/30 text-slate-500 text-[10px] uppercase font-black tracking-widest border-b border-slate-800">
+                                <th class="px-10 py-6">Opposing Squad</th>
+                                <th class="px-6 py-6 text-right">Matches</th>
+                                <th class="px-6 py-6 text-right">Kills</th>
+                                <th class="px-6 py-6 text-right">D/A</th>
+                                <th class="px-10 py-6 text-right">K/D</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-800/30">
+                            {% for stat in opponent_stats %}
+                            <tr class="hover:bg-brand/5 transition-colors group">
+                                <td class="px-10 py-6">
+                                    <div class="flex items-center gap-3">
+                                        <div
+                                            class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-xs font-bold text-slate-400 group-hover:bg-brand group-hover:text-white transition-colors">
+                                            {{ stat.team_name[0] | upper }}
+                                        </div>
+                                        <span class="font-bold text-slate-200">{{ stat.team_name }}</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-6 text-right font-mono text-slate-400">{{ stat.match_count }}</td>
+                                <td class="px-6 py-6 text-right font-display font-bold text-white">{{ stat.total_kills
+                                    }}</td>
+                                <td class="px-6 py-6 text-right text-xs text-slate-500">{{ stat.total_deaths }} / {{
+                                    stat.total_assists }}</td>
+                                <td class="px-10 py-6 text-right">
+                                    <span
+                                        class="px-3 py-1 rounded-full bg-slate-950 border border-slate-800 text-brand font-bold font-display">
+                                        {{ "%.2f"|format(stat.total_kills / stat.total_deaths if stat.total_deaths > 0
+                                        else stat.total_kills) }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
 
-    <p>Team: <b>{{ player.team_name if player.team_name else 'No Team Assigned' }}</b></p>
-
-    <table>
-        <tr><td><b>Email:</b></td><td>{{ player.email }}</td></tr>
-        <tr><td><b>Kills:</b></td><td>{{ player.kills }}</td></tr>
-        <tr><td><b>Deaths:</b></td><td>{{ player.deaths }}</td></tr>
-        <tr><td><b>Assists:</b></td><td>{{ player.assists }}</td></tr>
-        <tr><td><b>K/D Ratio:</b></td><td>{{ "%.2f"|format(player.kd_ratio if player.kd_ratio else 0) }}</td></tr>
-        <tr><td><b>Total Matches:</b></td><td>{{ player.total_matches }}</td></tr>
-        <tr><td><b>Year:</b></td><td>{{ player.year }}</td></tr>
-    </table>
+                            {% if not opponent_stats %}
+                            <tr>
+                                <td colspan="5" class="px-10 py-20 text-center text-slate-600 italic text-sm">
+                                    No head-to-head engagement data recorded yet.
+                                </td>
+                            </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-
-<button onclick="location.href='/leaderboard'">Back to Leaderboard</button>
-
-</body>
-</html>
+{% endblock %}

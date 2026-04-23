@@ -1,53 +1,83 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>Enter Match Results</title>
-<style>
-    body { background:#111; color:white; text-align:center; font-family:Arial; }
-    table { width:90%; margin:auto; border-collapse:collapse; }
-    th, td { padding:10px; border-bottom:1px solid gray; }
-    input { width:60px; padding:6px; }
-</style>
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}Enter Match Results - COD Champions Cup{% endblock %}
+{% block content %}
+<div class="max-w-6xl mx-auto">
+    <div class="flex items-center justify-between mb-8">
+        <h1 class="text-3xl text-brand">Enter Match Stats</h1>
+        <a href="{{ url_for('admin_matches') }}" class="text-slate-500 hover:text-white transition-colors">← Back to
+            Selection</a>
+    </div>
 
-<h2>Enter Match Stats</h2>
+    <form action="{{ url_for('save_match') }}" method="POST">
+        <input type="hidden" name="team_a_id" value="{{ team_a_id }}">
+        <input type="hidden" name="team_b_id" value="{{ team_b_id }}">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12">
+            <!-- Team A -->
+            <div class="bg-slate-900 rounded-3xl border border-slate-800 p-8">
+                <h3 class="text-xl font-bold mb-6 text-brand">Team A</h3>
+                <div class="space-y-6">
+                    {% for p in players_a %}
+                    <div class="p-6 bg-slate-950/50 rounded-2xl border border-slate-800">
+                        <p class="font-bold mb-4">{{ p.player_name }}</p>
+                        <div class="grid grid-cols-3 gap-4">
+                            <div>
+                                <label class="text-[10px] text-slate-500 uppercase font-bold">Kills</label>
+                                <input type="number" name="kills_{{ p.id }}" required
+                                    class="w-full bg-slate-900 border border-slate-800 p-2 rounded-lg text-center font-display text-brand">
+                            </div>
+                            <div>
+                                <label class="text-[10px] text-slate-500 uppercase font-bold">Deaths</label>
+                                <input type="number" name="deaths_{{ p.id }}" required
+                                    class="w-full bg-slate-900 border border-slate-800 p-2 rounded-lg text-center font-display">
+                            </div>
+                            <div>
+                                <label class="text-[10px] text-slate-500 uppercase font-bold">Assists</label>
+                                <input type="number" name="assists_{{ p.id }}" required
+                                    class="w-full bg-slate-900 border border-slate-800 p-2 rounded-lg text-center font-display text-blue-400">
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
 
-<form action="/admin/save_match" method="POST">
+            <!-- Team B -->
+            <div class="bg-slate-900 rounded-3xl border border-slate-800 p-8">
+                <h3 class="text-xl font-bold mb-6 text-brand">Team B</h3>
+                <div class="space-y-6">
+                    {% for p in players_b %}
+                    <div class="p-6 bg-slate-950/50 rounded-2xl border border-slate-800">
+                        <p class="font-bold mb-4">{{ p.player_name }}</p>
+                        <div class="grid grid-cols-3 gap-4">
+                            <div>
+                                <label class="text-[10px] text-slate-500 uppercase font-bold">Kills</label>
+                                <input type="number" name="kills_{{ p.id }}" required
+                                    class="w-full bg-slate-900 border border-slate-800 p-2 rounded-lg text-center font-display text-brand">
+                            </div>
+                            <div>
+                                <label class="text-[10px] text-slate-500 uppercase font-bold">Deaths</label>
+                                <input type="number" name="deaths_{{ p.id }}" required
+                                    class="w-full bg-slate-900 border border-slate-800 p-2 rounded-lg text-center font-display">
+                            </div>
+                            <div>
+                                <label class="text-[10px] text-slate-500 uppercase font-bold">Assists</label>
+                                <input type="number" name="assists_{{ p.id }}" required
+                                    class="w-full bg-slate-900 border border-slate-800 p-2 rounded-lg text-center font-display text-blue-400">
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
 
-<h3>Team A</h3>
-<table>
-<tr><th>Player</th><th>Kills</th><th>Deaths</th><th>Assists</th></tr>
-{% for p in players_a %}
-<tr>
-    <td>{{ p.player_name }}</td>
-    <td><input type="number" name="kills_{{ p.id }}" required></td>
-    <td><input type="number" name="deaths_{{ p.id }}" required></td>
-    <td><input type="number" name="assists_{{ p.id }}" required></td>
-</tr>
-{% endfor %}
-</table>
-
-<br>
-
-<h3>Team B</h3>
-<table>
-<tr><th>Player</th><th>Kills</th><th>Deaths</th><th>Assists</th></tr>
-{% for p in players_b %}
-<tr>
-    <td>{{ p.player_name }}</td>
-    <td><input type="number" name="kills_{{ p.id }}" required></td>
-    <td><input type="number" name="deaths_{{ p.id }}" required></td>
-    <td><input type="number" name="assists_{{ p.id }}" required></td>
-</tr>
-{% endfor %}
-</table>
-
-<br>
-<button type="submit">Save Match Result ✅</button>
-<button onclick="location.href='/admin/dashboard'">Back to Dashboard</button>
-
-</form>
-
-</body>
-</html>
+        <div
+            class="flex gap-4 sticky bottom-8 bg-slate-900/80 backdrop-blur-xl p-6 rounded-3xl border border-white/5 shadow-2xl justify-center">
+            <button type="submit"
+                class="bg-brand px-12 py-4 rounded-2xl font-bold shadow-xl shadow-brand/20 hover:scale-105 transition-all">Save
+                Match Results ✅</button>
+            <a href="{{ url_for('admin_dashboard') }}" class="bg-slate-800 px-12 py-4 rounded-2xl font-bold">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

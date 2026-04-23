@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Tournament Bracket - COD Champions Cup{% endblock %}
+{% block content %}
+<div class="max-w-7xl mx-auto overflow-x-auto pb-20 scrollbar-custom">
+    <div class="text-center mb-16">
+        <h1 class="text-6xl font-black text-white italic tracking-tighter uppercase mb-4">Tactical <span
+                class="text-brand">Brackets</span></h1>
+        <p class="text-slate-400 text-lg uppercase tracking-widest font-bold">Follow the Road to the Grand Championship
+        </p>
+    </div>
+
+    <!-- Visual Bracket Layout (Simplified Flexbox Tree) -->
+    <div class="flex gap-20 items-center justify-center min-w-[1000px]">
+        {% set rounds = ['Quarter-Finals', 'Semi-Finals', 'Finals'] %}
+
+        {% for round in rounds %}
+        <div class="flex flex-col gap-12 flex-1">
+            <h3 class="text-center text-slate-500 font-black uppercase tracking-[0.3em] mb-4 text-xs">{{ round }}</h3>
+            <div class="space-y-24">
+                {% for match in matches if match.round_name == round %}
+                <div class="relative">
+                    <div
+                        class="bg-slate-900 border border-slate-800 rounded-2xl w-full shadow-2xl relative z-10 overflow-hidden group hover:border-brand/50 transition-all duration-500">
+                        <div
+                            class="p-4 border-b border-slate-800 flex items-center justify-between transition-colors {{ 'bg-brand/10' if match.winner_team_id == match.team_a_id else 'bg-slate-950' }}">
+                            <span
+                                class="font-bold uppercase tracking-tight {{ 'text-brand' if match.winner_team_id == match.team_a_id else 'text-slate-400' }}">
+                                {{ match.team_a_name or 'TBD' }}
+                            </span>
+                            {% if match.winner_team_id == match.team_a_id %}
+                            <span class="text-brand text-[10px] font-black uppercase">ADVANCED</span>
+                            {% endif %}
+                        </div>
+                        <div
+                            class="p-4 flex items-center justify-between transition-colors {{ 'bg-brand/10' if match.winner_team_id == match.team_b_id else 'bg-slate-950' }}">
+                            <span
+                                class="font-bold uppercase tracking-tight {{ 'text-brand' if match.winner_team_id == match.team_b_id else 'text-slate-400' }}">
+                                {{ match.team_b_name or 'TBD' }}
+                            </span>
+                            {% if match.winner_team_id == match.team_b_id %}
+                            <span class="text-brand text-[10px] font-black uppercase">ADVANCED</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

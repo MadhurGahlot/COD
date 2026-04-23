@@ -1,202 +1,149 @@
-<!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends "base.html" %}
+{% block title %}COD Champions Cup — GKV {{ session.get('selected_year') }}{% endblock %}
 
-    <title>COD Champions Cup — GKV {{ session.get('selected_year') }}</title>
-
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
-
-    <style type="text/tailwindcss">
-        @theme {
-            --font-sans: 'Inter', sans-serif;
-            --font-display: 'Oswald', sans-serif;
-            --color-brand: #6366f1;
-        }
-
-        body {
-            @apply bg-slate-950 text-slate-200 font-sans antialiased min-h-screen;
-            background-image: radial-gradient(circle at 50% 0%, #1e1b4b 0%, #020617 70%);
-        }
-
-        h1, h2 {
-            @apply font-display uppercase tracking-wider;
-        }
-    </style>
-</head>
-
-<body>
-
-<!-- NAVBAR -->
-<nav class="w-full flex items-center justify-between px-6 py-4
-            border-b border-white/5 bg-slate-950/60 backdrop-blur-md sticky top-0 z-50">
-
-    <div class="flex items-center gap-3">
-        <img src="/static/{{ settings.college_logo }}"
-             class="h-10 w-10 rounded-full border border-white/10">
-        <span class="font-display font-bold text-white text-lg hidden sm:block">
-            COD Champions Cup
-        </span>
+{% block content %}
+<!-- HERO SECTION -->
+<section
+    class="relative overflow-hidden rounded-3xl mb-24 border border-white/5 shadow-2xl shadow-black/50 min-h-[500px] flex items-center">
+    <div id="hero-carousel" class="absolute inset-0 w-full h-full">
+        {% if hero_images %}
+        {% for img in hero_images %}
+        <img src="/static/{{ img.image }}"
+            class="carousel-item absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 {% if loop.first %}opacity-100{% else %}opacity-0{% endif %}">
+        {% endfor %}
+        {% elif settings.hero_background %}
+        <img src="/static/{{ settings.hero_background }}" class="absolute inset-0 w-full h-full object-cover">
+        {% endif %}
     </div>
 
-    <div class="flex items-center gap-6">
-        <form action="/set_year" method="POST">
-            <select name="year" onchange="this.form.submit()"
-                class="bg-slate-900 border border-slate-700 text-indigo-400 font-bold
-                       py-2 px-4 rounded-lg cursor-pointer hover:bg-slate-800">
-                {% for y in range(2023, 2032) %}
-                <option value="{{ y }}"
-                    {% if session.get('selected_year') == y %}selected{% endif %}>
-                    {{ y }} Season
-                </option>
-                {% endfor %}
-            </select>
-        </form>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const items = document.querySelectorAll('.carousel-item');
+            if (items.length <= 1) return;
 
-        <div class="hidden md:flex gap-6 font-semibold text-sm">
-            <a href="/" class="hover:text-indigo-400">Home</a>
-            <a href="/teams" class="hover:text-indigo-400">Teams</a>
-            <a href="/leaderboard" class="hover:text-indigo-400">Leaderboard</a>
-            <a href="/matches" class="hover:text-indigo-400">Matches</a>
-            <a href="/winners" class="hover:text-indigo-400">Hall of Fame</a>
-            <a href="/admin/login" class="text-indigo-400 hover:text-indigo-300">Admin</a>
-        </div>
-    </div>
-</nav>
+            let current = 0;
+            setInterval(() => {
+                items[current].classList.remove('opacity-100');
+                items[current].classList.add('opacity-0');
+                current = (current + 1) % items.length;
+                items[current].classList.remove('opacity-0');
+                items[current].classList.add('opacity-100');
+            }, 5000);
+        });
+    </script>
+    <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/70 to-transparent"></div>
 
-<!-- HERO -->
-<section class="relative overflow-hidden rounded-3xl mx-4 mt-10 mb-24
-               border border-white/5 shadow-2xl shadow-black/50">
-
-    <img src="/static/{{ settings.hero_background }}"
-         class="absolute inset-0 w-full h-full object-cover">
-
-    <div class="absolute inset-0 bg-gradient-to-t
-                from-slate-950 via-slate-950/70 to-transparent"></div>
-
-    <div class="relative z-10 py-32 px-6 text-center max-w-4xl mx-auto">
+    <div class="relative z-10 py-20 px-6 text-center max-w-4xl mx-auto">
         <h1 class="text-5xl md:text-7xl font-black text-white mb-6 drop-shadow-lg">
             {{ settings.hero_title }}
         </h1>
-
         <p class="text-slate-300 text-lg md:text-xl mb-10">
             {{ settings.hero_subtitle }}
         </p>
-
         <div class="flex justify-center gap-4 flex-wrap">
-            <a href="/leaderboard"
-               class="px-8 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500
-                      text-white font-bold shadow-lg transition">
-                View Leaderboard
+            {% if not session.user_id %}
+            <a href="{{ url_for('register') }}"
+                class="px-8 py-3 rounded-xl bg-brand hover:bg-brand/90 text-white font-bold shadow-lg transition shadow-brand/20">
+                Join the Tournament
             </a>
-
-            <a href="/matches"
-               class="px-8 py-3 rounded-xl border border-white/20
-                      hover:bg-white/10 text-white font-semibold transition">
-                View Matches
+            {% else %}
+            <a href="{{ url_for('leaderboard') }}"
+                class="px-8 py-3 rounded-xl bg-brand hover:bg-brand/90 text-white font-bold shadow-lg transition">
+                Points Table
+            </a>
+            {% endif %}
+            <a href="{{ url_for('public_schedule') }}"
+                class="px-8 py-3 rounded-xl border border-white/20 hover:bg-white/10 text-white font-semibold transition">
+                Match Fixtures
             </a>
         </div>
     </div>
 </section>
 
-<!-- ABOUT -->
-<section class="max-w-6xl mx-auto px-6 mb-24">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-
-        <div>
-            <h2 class="text-4xl font-black text-white mb-4">
-                About the Tournament
-            </h2>
-            <p class="text-slate-400 leading-relaxed">
-                COD Champions Cup is the official Call of Duty esports tournament
-                organized by Gurukula Kangri Vishwavidyalaya. The platform tracks
-                teams, players, match performances, MVPs, and historical results.
-            </p>
+<!-- QUICK STATS -->
+<section class="max-w-6xl mx-auto mb-24">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div class="bg-slate-900 shadow-xl border border-slate-800 p-8 rounded-2xl text-center">
+            <h3 class="text-3xl font-display font-black text-brand">{{ teams }}</h3>
+            <p class="text-slate-500 text-sm uppercase tracking-widest mt-2">Teams</p>
         </div>
+        <div class="bg-slate-900 shadow-xl border border-slate-800 p-8 rounded-2xl text-center">
+            <h3 class="text-3xl font-display font-black text-brand">{{ players }}</h3>
+            <p class="text-slate-500 text-sm uppercase tracking-widest mt-2">Players</p>
+        </div>
+        <div class="bg-slate-900 shadow-xl border border-slate-800 p-8 rounded-2xl text-center">
+            <h3 class="text-3xl font-display font-black text-brand">{{ matches }}</h3>
+            <p class="text-slate-500 text-sm uppercase tracking-widest mt-2">Matches</p>
+        </div>
+        <div class="bg-slate-900 shadow-xl border border-slate-800 p-8 rounded-2xl text-center">
+            <h3 class="text-3xl font-display font-black text-brand">GKV</h3>
+            <p class="text-slate-500 text-sm uppercase tracking-widest mt-2">Gurukula</p>
+        </div>
+    </div>
+</section>
 
-        <div class="grid grid-cols-3 gap-4">
-            {% for label, value in [('Teams', teams), ('Players', players), ('Matches', matches)] %}
-            <div class="bg-slate-900/50 backdrop-blur-xl border border-white/5
-                        rounded-2xl p-6 text-center shadow-xl">
-                <h3 class="text-4xl font-display font-black text-indigo-400">
-                    {{ value }}
-                </h3>
-                <p class="text-slate-400 mt-2">{{ label }}</p>
+<!-- HIGHLIGHTS & NEWS TICKER -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-12 max-w-6xl mx-auto mb-24">
+    <div class="lg:col-span-2">
+        <h2 class="text-3xl font-black mb-8">Event <span class="text-brand">Highlights</span></h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {% for h in highlights %}
+            <div class="premium-card rounded-2xl">
+                <div class="h-48 overflow-hidden relative">
+                    <img src="/static/{{ h.image }}" class="zoom-img">
+                    <div
+                        class="absolute inset-0 bg-brand/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                    </div>
+                </div>
+                <div class="p-6">
+                    <h4 class="font-bold text-lg mb-2">{{ h.title }}</h4>
+                    <p class="text-slate-500 text-sm line-clamp-2">{{ h.description }}</p>
+                </div>
             </div>
             {% endfor %}
         </div>
-
     </div>
-</section>
 
-<!-- HIGHLIGHTS -->
-<section class="max-w-6xl mx-auto px-6 mb-24">
-    <h2 class="text-4xl font-black text-center text-white mb-12">
-        Event Highlights
-    </h2>
-
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {% for h in highlights %}
-        <div class="bg-slate-900/50 backdrop-blur-xl border border-white/5
-                    rounded-2xl overflow-hidden shadow-xl hover:scale-[1.02] transition">
-
-            <img src="/static/{{ h.image }}" class="h-48 w-full object-cover">
-
-            <div class="p-6">
-                <h3 class="font-bold text-white text-lg mb-2">
-                    {{ h.title }}
-                </h3>
-                <p class="text-slate-400 text-sm">
-                    {{ h.description }}
-                </p>
-            </div>
+    <div>
+        <h2 class="text-3xl font-black mb-8 line">Latest <span class="text-brand">Updates</span></h2>
+        <div class="bg-slate-900/50 border border-slate-800 rounded-3xl p-6 space-y-6">
+            <p class="text-slate-500 italic text-sm">Stay updated with tournament news...</p>
+            <a href="{{ url_for('public_news') }}"
+                class="block text-brand font-bold uppercase tracking-widest border-t border-slate-800 pt-6 hover:text-white transition-colors">
+                View All News →
+            </a>
         </div>
-        {% endfor %}
     </div>
-</section>
+</div>
 
 <!-- TOP PLAYERS -->
-<section class="max-w-6xl mx-auto px-6 mb-24">
-    <h2 class="text-4xl font-black text-center text-white mb-12">
-        Top Featured Players
-    </h2>
+<section class="max-w-6xl mx-auto mb-24">
+    <div class="flex items-center justify-between mb-12">
+        <h2 class="text-4xl font-black">Top <span class="text-brand">Players</span></h2>
+        <a href="{{ url_for('leaderboard') }}" class="text-slate-400 hover:text-brand transition-colors font-bold">View
+            Points Table →</a>
+    </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
         {% for p in top_players %}
-        <div class="bg-slate-900/50 backdrop-blur-xl border border-white/5
-                    rounded-2xl p-6 text-center shadow-xl">
-
-            <img src="/static/player_photos/{{ p.photo }}"
-                 class="h-24 w-24 mx-auto rounded-full object-cover
-                        border-2 border-indigo-500 shadow-lg mb-4">
-
-            <h3 class="text-white font-bold text-lg">
-                {{ p.player_name }}
-            </h3>
-
-            <p class="text-slate-400 text-sm mt-1">
-                K/D: <span class="text-indigo-400 font-bold">{{ p.kd_ratio }}</span>
-            </p>
-
-            <p class="text-slate-500 text-sm">
-                Kills: {{ p.kills }}
-            </p>
+        <div class="premium-card rounded-3xl p-8 text-center group">
+            <div
+                class="absolute inset-0 bg-gradient-to-br from-brand/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+            </div>
+            <div class="relative z-10 inline-block mb-6">
+                <div class="player-card-circle">
+                    <img src="/static/player_photos/{{ p.photo }}" class="zoom-img">
+                </div>
+                <div
+                    class="absolute -bottom-2 -right-2 bg-brand text-[10px] font-bold px-2 py-1 rounded-full text-white shadow-lg group-hover:scale-110 transition-transform">
+                    #{{ p.rank_number }}
+                </div>
+            </div>
+            <h3 class="text-xl font-bold mb-1">{{ p.player_name }}</h3>
+            <p class="text-slate-500 text-sm mb-4">KD Ratio: <span class="text-brand font-bold font-mono">{{ p.kd_ratio
+                    }}</span></p>
         </div>
         {% endfor %}
     </div>
 </section>
-
-<!-- FOOTER -->
-<footer class="border-t border-white/5 bg-slate-950 py-10 text-center text-slate-500">
-    <img src="/static/{{ settings.college_logo }}"
-         class="h-12 mx-auto mb-3 opacity-80">
-    <p>© 2025 COD Champions Cup — Gurukula Kangri Vishwavidyalaya</p>
-</footer>
-
-</body>
-</html>
+{% endblock %}

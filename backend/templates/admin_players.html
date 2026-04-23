@@ -1,71 +1,125 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Manage Players</title>
-    <style>
-        body { background: #111; color: white; text-align: center; font-family: Arial; }
-        form { margin-top: 20px; }
-        input, select {
-            padding: 10px; width: 230px; border-radius: 5px; border: none; margin: 5px;
-        }
-        button {
-            padding: 10px 20px; background: #e63946; color: white; border: none;
-            cursor: pointer; border-radius: 5px;
-        }
-        table {
-            width: 85%; margin: auto; margin-top: 40px; border-collapse: collapse;
-        }
-        th, td { border-bottom: 1px solid grey; padding: 10px; }
-        img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; }
-    </style>
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}Manage Players - COD Champions Cup{% endblock %}
+{% block content %}
+<div class="max-w-6xl mx-auto">
+    <div class="flex items-center justify-between mb-8">
+        <h1 class="text-3xl text-brand">Manage Players</h1>
+        <a href="{{ url_for('admin_dashboard') }}" class="text-slate-500 hover:text-white transition-colors">← Back to
+            Dashboard</a>
+    </div>
 
-<h1>Manage Players</h1>
+    <!-- Add Player Form -->
+    <div class="bg-slate-900 p-8 rounded-2xl border border-slate-800 mb-12 shadow-xl">
+        <h2 class="text-xl mb-6 font-bold">Upload New Player</h2>
+        <form action="{{ url_for('admin_players') }}" method="POST" enctype="multipart/form-data">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+                <div>
+                    <label class="block text-slate-400 mb-2">Full Name</label>
+                    <input type="text" name="player_name" placeholder="John Doe" required
+                        class="w-full bg-slate-950 border border-slate-800 p-3 rounded-lg focus:outline-none focus:border-brand">
+                </div>
+                <div>
+                    <label class="block text-slate-400 mb-2">COD Name</label>
+                    <input type="text" name="cod_name" placeholder="Ghost_123" required
+                        class="w-full bg-slate-950 border border-slate-800 p-3 rounded-lg focus:outline-none focus:border-brand">
+                </div>
+                <div>
+                    <label class="block text-slate-400 mb-2">Email</label>
+                    <input type="email" name="email" placeholder="john@example.com" required
+                        class="w-full bg-slate-950 border border-slate-800 p-3 rounded-lg focus:outline-none focus:border-brand">
+                </div>
+                <div>
+                    <label class="block text-slate-400 mb-2">Assign Team</label>
+                    <select name="team_id"
+                        class="w-full bg-slate-950 border border-slate-800 p-3 rounded-lg focus:outline-none focus:border-brand">
+                        <option value="">No Team</option>
+                        {% for team in teams %}
+                        <option value="{{ team.id }}">{{ team.team_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-slate-400 mb-2">Link User Account (Optional)</label>
+                    <select name="user_id"
+                        class="w-full bg-slate-950 border border-slate-800 p-3 rounded-lg focus:outline-none focus:border-brand">
+                        <option value="">Not Linked</option>
+                        {% for user in users %}
+                        <option value="{{ user.id }}">{{ user.username }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-slate-400 mb-2">Tournament Year</label>
+                    <input type="number" name="year" value="{{ session.selected_year }}"
+                        class="w-full bg-slate-950 border border-slate-800 p-3 rounded-lg focus:outline-none focus:border-brand">
+                </div>
+            </div>
+            <div class="mb-6">
+                <label class="block text-slate-400 mb-2">Photo</label>
+                <input type="file" name="photo" class="w-full text-slate-400">
+            </div>
+            <button type="submit"
+                class="bg-brand px-12 py-3 rounded-lg font-bold hover:bg-brand/90 transition-all shadow-lg shadow-brand/20">Upload
+                Player</button>
+        </form>
+    </div>
 
-<form action="/admin/add_player" method="POST" enctype="multipart/form-data">
-    <input type="text" name="player_name" placeholder="Player Full Name" required>
-    <input type="text" name="cod_name" placeholder="COD In-Game Name" required>
-    <input type="email" name="email" placeholder="College Email (@gkv.ac.in)" required>
-
-    <select name="team_id" required>
-        <option disabled selected>Select Team</option>
-        {% for team in teams %}
-            <option value="{{ team.id }}">{{ team.team_name }}</option>
-        {% endfor %}
-    </select>
-
-    <input type="file" name="photo" accept="image/*">
-    <input type="number" name="year" placeholder="Tournament Year" required>
-
-    <button type="submit">Add Player</button>
-</form>
-
-<table>
-<tr>
-    <th>Photo</th>
-    <th>Name</th>
-    <th>COD Name</th>
-    <th>Email</th>
-    <th>Team</th>
-</tr>
-
-{% for p in players %}
-<tr>
-    <td>
-        {% if p.photo %}
-            <img src="/static/player_photos/{{ p.photo }}">
-        {% else %}
-            No Photo
-        {% endif %}
-    </td>
-    <td>{{ p.player_name }}</td>
-    <td>{{ p.cod_name }}</td>
-    <td>{{ p.email }}</td>
-    <td>{{ p.team_name if p.team_name else "No Team" }}</td>
-</tr>
-{% endfor %}
-</table>
-
-<br>
-<button onclick="location.href='/admin/dashboard'">Back</button>
+    <!-- Players Table -->
+    <div class="bg-slate-900 rounded-3xl border border-slate-800 overflow-hidden shadow-2xl">
+        <table class="w-full text-left">
+            <thead class="bg-slate-950/50">
+                <tr class="border-b border-slate-800">
+                    <th class="p-6 text-brand font-bold uppercase text-xs tracking-widest">Player</th>
+                    <th class="p-6 text-brand font-bold uppercase text-xs tracking-widest">Contact</th>
+                    <th class="p-6 text-brand font-bold uppercase text-xs tracking-widest text-center">Stats (K/D)</th>
+                    <th class="p-6 text-brand font-bold uppercase text-xs tracking-widest text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800/50">
+                {% for p in players %}
+                <tr class="hover:bg-slate-800/20 transition-colors group">
+                    <td class="p-6">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-slate-800 rounded-full overflow-hidden border-2 border-slate-700">
+                                {% if p.photo %}
+                                <img src="/static/player_photos/{{ p.photo }}" class="w-full h-full object-cover">
+                                {% else %}
+                                <div class="w-full h-full flex items-center justify-center text-slate-600">?</div>
+                                {% endif %}
+                            </div>
+                            <div>
+                                <h4 class="font-bold">{{ p.player_name }}</h4>
+                                <p class="text-brand text-xs font-mono">{{ p.cod_name }}</p>
+                                <p class="text-slate-500 text-[10px] mt-1">{{ p.team_name if p.team_name else 'FREE
+                                    AGENT' }}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="p-6">
+                        <p class="text-slate-300 text-sm">{{ p.email }}</p>
+                        <p class="text-slate-500 text-xs mt-1">User: {{ p.username or 'Unlinked' }}</p>
+                    </td>
+                    <td class="p-6 text-center">
+                        <div class="text-indigo-400 font-bold text-xl">{{ "%.2f"|format(p.kd_ratio) }}</div>
+                        <div class="text-[10px] text-slate-500 uppercase">{{ p.kills }}K / {{ p.deaths }}D</div>
+                    </td>
+                    <td class="p-6 text-right">
+                        <div class="flex justify-end gap-3">
+                            <a href="{{ url_for('edit_player', player_id=p.id) }}"
+                                class="p-2 bg-slate-800 hover:bg-slate-700 rounded-lg transition-colors" title="Edit">
+                                ✏️
+                            </a>
+                            <a href="{{ url_for('delete_player', player_id=p.id) }}"
+                                class="p-2 bg-slate-800 hover:bg-red-500/20 text-red-400 border border-transparent hover:border-red-500/30 rounded-lg transition-all"
+                                onclick="return confirm('Permanently delete this player?')" title="Delete">
+                                🗑️
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

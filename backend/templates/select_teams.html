@@ -1,42 +1,53 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>Select Teams</title>
-<style>
-    body { background:#08d4d4; color:rgb(221, 19, 19); text-align:center; font-family:Arial; }
-    select, 
-    button {
-            padding: 10px 20px; background: #e63946; color: white; border: none;
-            cursor: pointer; border-radius: 5px;
-        }
-</style>
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}Select Teams - COD Champions Cup{% endblock %}
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <div class="text-center mb-12">
+        <h1 class="text-3xl text-brand mb-4">Select Teams for Match</h1>
+        <p class="text-slate-500">Choose two teams to start entering match performance data.</p>
+    </div>
 
-<h2>Select Teams for Match</h2>
+    <div class="bg-slate-900 p-8 rounded-3xl border border-slate-800 shadow-xl">
+        <form method="POST">
+            <div class="grid grid-cols-1 gap-8 mb-8">
+                <div>
+                    <label class="block text-slate-400 mb-2 uppercase text-xs font-bold tracking-widest">Team A
+                        (Home)</label>
+                    <select name="team_a" required
+                        class="w-full bg-slate-950 border border-slate-800 p-4 rounded-xl focus:outline-none focus:border-brand">
+                        <option disabled selected>Select Team A</option>
+                        {% for t in teams %}
+                        <option value="{{ t.id }}">{{ t.team_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
 
-<form method="POST">
-    <select name="team_a" required>
-        <option disabled selected>Team A</option>
-        {% for t in teams %}
-        <option value="{{ t.id }}">{{ t.team_name }}</option>
-        {% endfor %}
-    </select>
+                <div class="flex justify-center">
+                    <div
+                        class="w-12 h-12 bg-slate-800 rounded-full flex items-center justify-center font-display text-slate-500 border border-slate-700">
+                        VS</div>
+                </div>
 
-    <select name="team_b" required>
-        <option disabled selected>Team B</option>
-        {% for t in teams %}
-        <option value="{{ t.id }}">{{ t.team_name }}</option>
-        {% endfor %}
-    </select>
+                <div>
+                    <label class="block text-slate-400 mb-2 uppercase text-xs font-bold tracking-widest">Team B
+                        (Away)</label>
+                    <select name="team_b" required
+                        class="w-full bg-slate-950 border border-slate-800 p-4 rounded-xl focus:outline-none focus:border-brand">
+                        <option disabled selected>Select Team B</option>
+                        {% for t in teams %}
+                        <option value="{{ t.id }}">{{ t.team_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
 
-    <br>
-    <button type="submit">Next →</button>
-    
-</form>
-
-</body>
-
-
-<button onclick="location.href='/admin/dashboard'">Back to Dashboard</button>
-</html>
+            <button type="submit"
+                class="w-full bg-brand py-4 rounded-2xl font-bold shadow-xl shadow-brand/20 hover:scale-105 transition-all text-lg mb-4">
+                Continue to Stats Entry →
+            </button>
+            <a href="{{ url_for('admin_dashboard') }}"
+                class="block text-center text-slate-500 hover:text-white transition-colors">Back to Dashboard</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

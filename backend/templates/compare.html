@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+{% block title %}Player Comparison - COD Champions Cup{% endblock %}
+{% block content %}
+<div class="max-w-6xl mx-auto">
+    <div class="text-center mb-12">
+        <h1 class="text-5xl font-black text-white uppercase tracking-tighter">Player <span
+                class="text-brand">Head-to-Head</span></h1>
+        <p class="text-slate-400 mt-4 text-lg">Compare statistics between two tournament players.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+        <!-- Player 1 Selection -->
+        <div class="bg-slate-900/50 backdrop-blur-xl border border-slate-800 p-8 rounded-[2.5rem] shadow-2xl">
+            <label class="block text-[10px] font-black uppercase tracking-widest text-brand mb-4">Player Alpha</label>
+            <select id="p1Select"
+                class="w-full bg-slate-950 border border-slate-800 text-white rounded-2xl px-6 py-4 focus:border-brand outline-none transition-colors appearance-none cursor-pointer">
+                <option value="">Select Player...</option>
+                {% for player in players %}
+                <option value="{{ player.id }}">{{ player.player_name }} ({{ player.cod_name }})</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Player 2 Selection -->
+        <div class="bg-slate-900/50 backdrop-blur-xl border border-slate-800 p-8 rounded-[2.5rem] shadow-2xl">
+            <label class="block text-[10px] font-black uppercase tracking-widest text-brand mb-4">Player Bravo</label>
+            <select id="p2Select"
+                class="w-full bg-slate-950 border border-slate-800 text-white rounded-2xl px-6 py-4 focus:border-brand outline-none transition-colors appearance-none cursor-pointer">
+                <option value="">Select Player...</option>
+                {% for player in players %}
+                <option value="{{ player.id }}">{{ player.player_name }} ({{ player.cod_name }})</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <div class="flex justify-center mb-16">
+        <button id="compareBtn"
+            class="bg-brand text-slate-950 px-12 py-4 rounded-2xl font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl shadow-brand/20 disabled:opacity-50 disabled:cursor-not-allowed">
+            Initiate Comparison
+        </button>
+    </div>
+
+    <!-- Comparison Results -->
+    <div id="resultsArea" class="hidden animate-in fade-in slide-in-from-bottom-10 duration-700">
+        <div class="bg-slate-900 border border-slate-800 rounded-[3.5rem] overflow-hidden shadow-2xl relative">
+            <div class="absolute inset-0 bg-gradient-to-b from-brand/5 to-transparent pointer-events-none"></div>
+
+            <div class="grid grid-cols-3 border-b border-slate-800 bg-slate-950/50">
+                <div class="p-10 text-center border-r border-slate-800">
+                    <img id="p1Img" src=""
+                        class="w-32 h-32 mx-auto rounded-3xl object-cover border-4 border-slate-900 shadow-xl mb-4">
+                    <h2 id="p1Name" class="text-2xl font-black text-white uppercase italic"></h2>
+                    <p id="p1Team" class="text-brand font-bold text-xs uppercase tracking-widest"></p>
+                </div>
+                <div class="flex flex-center justify-center p-10 relative">
+                    <div
+                        class="absolute inset-0 flex items-center justify-center text-8xl font-black text-slate-800/20 italic select-none">
+                        VS</div>
+                </div>
+                <div class="p-10 text-center border-l border-slate-800">
+                    <img id="p2Img" src=""
+                        class="w-32 h-32 mx-auto rounded-3xl object-cover border-4 border-slate-900 shadow-xl mb-4">
+                    <h2 id="p2Name" class="text-2xl font-black text-white uppercase italic"></h2>
+                    <p id="p2Team" class="text-brand font-bold text-xs uppercase tracking-widest"></p>
+                </div>
+            </div>
+
+            <div class="p-10">
+                <div class="space-y-4">
+                    {% set metrics = [
+                    ('total_matches', 'Matches Played'),
+                    ('total_kills', 'Confirmed Kills'),
+                    ('kd_ratio', 'Average K/D'),
+                    ('total_assists', 'Assists'),
+                    ('avg_kills', 'Kills per Match')
+                    ] %}
+
+                    {% for key, label in metrics %}
+                    <div class="flex items-center gap-6 group">
+                        <div class="flex-1 text-right">
+                            <span id="p1_{{ key }}"
+                                class="text-2xl font-display font-black text-white transition-all group-hover:text-brand">0</span>
+                        </div>
+                        <div class="w-48 text-center px-4 py-2 bg-slate-950 border border-slate-800 rounded-full">
+                            <span class="text-[10px] font-black uppercase tracking-widest text-slate-500">{{ label
+                                }}</span>
+                        </div>
+                        <div class="flex-1 text-left">
+                            <span id="p2_{{ key }}"
+                                class="text-2xl font-display font-black text-white transition-all group-hover:text-brand">0</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const compareBtn = document.getElementById('compareBtn');
+    const resultsArea = document.getElementById('resultsArea');
+
+    compareBtn.addEventListener('click', async () => {
+        const p1 = document.getElementById('p1Select').value;
+        const p2 = document.getElementById('p2Select').value;
+
+        if (!p1 || !p2) {
+            alert("Please select two players for comparison.");
+            return;
+        }
+
+        compareBtn.disabled = true;
+        compareBtn.textContent = "Analyzing Intel...";
+
+        try {
+            const response = await fetch(`/api/compare_data?p1=${p1}&p2=${p2}`);
+            const data = await response.json();
+
+            if (data.error) throw new Error(data.error);
+
+            const updateSide = (side, player) => {
+                document.getElementById(`${side}Name`).textContent = player.player_name;
+                document.getElementById(`${side}Team`).textContent = player.team_name || "Free Agent";
+                document.getElementById(`${side}Img`).src = `/static/player_photos/${player.photo || 'default_player.png'}`;
+
+                const kd = player.total_deaths > 0 ? (player.total_kills / player.total_deaths).toFixed(2) : player.total_kills.toFixed(2);
+                const avgK = player.total_matches > 0 ? (player.total_kills / player.total_matches).toFixed(2) : 0;
+
+                document.getElementById(`${side}_total_matches`).textContent = player.total_matches || 0;
+                document.getElementById(`${side}_total_kills`).textContent = player.total_kills || 0;
+                document.getElementById(`${side}_kd_ratio`).textContent = kd;
+                document.getElementById(`${side}_total_assists`).textContent = player.total_assists || 0;
+                document.getElementById(`${side}_avg_kills`).textContent = avgK;
+
+                return { kd, avgK, kills: player.total_kills, matches: player.total_matches, assists: player.total_assists };
+            };
+
+            const s1 = updateSide('p1', data.p1);
+            const s2 = updateSide('p2', data.p2);
+
+            // Highlight winners
+            const compareAndHighlight = (key, val1, val2) => {
+                const e1 = document.getElementById(`p1_${key}`);
+                const e2 = document.getElementById(`p2_${key}`);
+                e1.classList.remove('text-brand', 'text-white');
+                e2.classList.remove('text-brand', 'text-white');
+
+                if (parseFloat(val1) > parseFloat(val2)) {
+                    e1.classList.add('text-brand', 'scale-110');
+                    e2.classList.add('text-slate-500');
+                } else if (parseFloat(val2) > parseFloat(val1)) {
+                    e2.classList.add('text-brand', 'scale-110');
+                    e1.classList.add('text-slate-500');
+                } else {
+                    e1.classList.add('text-white');
+                    e2.classList.add('text-white');
+                }
+            };
+
+            compareAndHighlight('total_matches', s1.matches, s2.matches);
+            compareAndHighlight('total_kills', s1.kills, s2.kills);
+            compareAndHighlight('kd_ratio', s1.kd, s2.kd);
+            compareAndHighlight('total_assists', s1.assists, s2.assists);
+            compareAndHighlight('avg_kills', s1.avgK, s2.avgK);
+
+            resultsArea.classList.remove('hidden');
+            resultsArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        } catch (err) {
+            alert("Extraction failed: " + err.message);
+        } finally {
+            compareBtn.disabled = false;
+            compareBtn.textContent = "Initiate Comparison";
+        }
+    });
+</script>
+{% endblock %}

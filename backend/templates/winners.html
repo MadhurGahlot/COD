@@ -1,147 +1,70 @@
-<!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends "base.html" %}
+{% block title %}Tournament History - COD Champions Cup{% endblock %}
+{% block content %}
+<div class="max-w-6xl mx-auto">
+    <div class="text-center mb-20">
+        <h1 class="text-5xl md:text-7xl font-black text-white mb-4">Champions <span class="text-brand">Legacy</span>
+        </h1>
+        <p class="text-slate-400 uppercase tracking-widest text-sm font-semibold">Tournament History</p>
+    </div>
 
-    <title>Hall of Fame — COD Champions Cup</title>
-
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
-
-    <style type="text/tailwindcss">
-        @theme {
-            --font-sans: 'Inter', sans-serif;
-            --font-display: 'Oswald', sans-serif;
-        }
-
-        body {
-            @apply bg-slate-950 text-slate-200 font-sans antialiased min-h-screen;
-            background-image: radial-gradient(circle at 50% 0%, #1e1b4b 0%, #020617 70%);
-        }
-
-        h1, h2 {
-            @apply font-display uppercase tracking-wider;
-        }
-
-        @keyframes glow {
-            0%, 100% { box-shadow: 0 0 25px rgba(250,204,21,0.4); }
-            50% { box-shadow: 0 0 45px rgba(250,204,21,0.9); }
-        }
-    </style>
-</head>
-
-<body>
-
-<!-- NAVBAR -->
-<nav class="w-full flex items-center gap-4 px-6 py-4
-            border-b border-white/5 bg-slate-950/60 backdrop-blur-md
-            sticky top-0 z-50">
-
-    <a href="/"
-       class="p-2 rounded-full bg-slate-800 text-slate-400
-              hover:bg-indigo-600 hover:text-white transition">
-        ←
-    </a>
-
-    <span class="font-display font-bold text-white text-lg">
-        Hall of Fame
-    </span>
-</nav>
-
-<!-- HEADER -->
-<section class="text-center mt-20 mb-16 px-6">
-    <h1 class="text-4xl md:text-6xl font-black text-white mb-3 drop-shadow-lg">
-        Champions
-    </h1>
-    <p class="text-slate-400 uppercase tracking-widest text-sm font-semibold">
-        Tournament History
-    </p>
-</section>
-
-<!-- WINNERS -->
-<section class="max-w-5xl mx-auto px-6 pb-24 space-y-12">
-
-{% for w in winners %}
-<div class="bg-slate-900/50 backdrop-blur-xl border border-white/5
-            rounded-3xl p-8 shadow-2xl">
-
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
-
-        <!-- YEAR + TEAMS -->
-        <div>
-            <h2 class="text-3xl font-black text-indigo-400 mb-4">
-                {{ w.year }}
-            </h2>
-
-            <p class="text-xl">
-                🏆
-                <a href="/team/{{ w.winner_team_id }}"
-                   class="font-bold text-white hover:text-yellow-400 transition">
-                    {{ w.winner_team }}
-                </a>
-            </p>
-
-            <p class="text-slate-400 mt-1">
-                🥈 Runner-Up: {{ w.runnerup_team }}
-            </p>
-
-            {% if w.final_score %}
-            <p class="mt-3 text-sm text-slate-300">
-                📊 Final Score:
-                <span class="font-bold text-indigo-400">
-                    {{ w.final_score }}
-                </span>
-            </p>
-            {% endif %}
+    <div class="grid grid-cols-1 gap-12">
+        {% if not winners %}
+        <div class="col-span-full bg-slate-900 p-12 rounded-3xl text-center text-slate-500 border border-slate-800">
+            Tournament History is currently empty. The next champion could be you.
         </div>
+        {% else %}
+        {% for w in winners %}
+        <div
+            class="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-[3rem] overflow-hidden shadow-2xl group hover:border-brand/30 transition-all">
+            <div class="grid grid-cols-1 lg:grid-cols-2 items-center">
+                <div class="p-12 lg:p-20 order-2 lg:order-1">
+                    <div class="inline-block bg-brand/10 text-brand px-4 py-1 rounded-full text-sm font-bold mb-6">
+                        SEASON {{ w.year }}</div>
+                    <h2 class="text-4xl md:text-6xl font-black text-white mb-4">{{ w.winner_team }}</h2>
+                    <div class="flex items-center gap-4 mb-8">
+                        <span class="text-slate-500 font-bold uppercase tracking-tighter">Vs</span>
+                        <span class="text-slate-300 text-xl font-display uppercase tracking-wider">{{ w.runnerup_team
+                            }}</span>
+                        <span class="ml-4 bg-slate-800 text-slate-400 px-4 py-1 rounded-lg font-mono text-sm">{{
+                            w.final_score }}</span>
+                    </div>
 
-        <!-- TROPHY -->
-        <div class="flex justify-center">
-            {% if w.winner_photo %}
-            <img src="/static/player_photos/{{ w.winner_photo }}"
-                 class="h-36 w-36 rounded-2xl object-cover
-                        border-2 border-yellow-400
-                        animate-[glow_2.5s_ease-in-out_infinite]">
-            {% endif %}
+                    {% if w.mvp_name %}
+                    <div class="flex items-center gap-6 p-6 bg-slate-950/50 rounded-3xl border border-slate-800">
+                        {% if w.mvp_photo %}
+                        <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-indigo-500 shadow-xl">
+                            <img src="{{ url_for('static', filename='player_photos/' + w.mvp_photo) }}"
+                                class="w-full h-full object-cover">
+                        </div>
+                        {% endif %}
+                        <div>
+                            <p class="text-[10px] text-yellow-500 font-bold uppercase tracking-widest mb-1">Season MVP
+                            </p>
+                            <p class="text-xl font-bold">{{ w.mvp_name }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div
+                    class="h-96 lg:h-full order-1 lg:order-2 bg-slate-800 relative group-hover:scale-[1.02] transition-transform duration-700">
+                    {% if w.winner_photo %}
+                    <img src="{{ url_for('static', filename='player_photos/' + w.winner_photo) }}"
+                        class="w-full h-full object-cover">
+                    {% else %}
+                    <div
+                        class="w-full h-full flex items-center justify-center text-slate-600 font-display text-2xl uppercase italic">
+                        Champions</div>
+                    {% endif %}
+                    <div
+                        class="absolute inset-0 bg-gradient-to-r lg:bg-gradient-to-l from-transparent via-slate-900/20 to-slate-900">
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <!-- MVP -->
-        <div class="text-center">
-            <h3 class="text-yellow-400 font-bold uppercase text-sm mb-2">
-                🏅 MVP of the Year
-            </h3>
-
-            {% if w.mvp_photo %}
-            <img src="/static/player_photos/{{ w.mvp_photo }}"
-                 class="h-24 w-24 mx-auto rounded-full object-cover
-                        border-2 border-indigo-500 shadow-lg mb-2">
-            {% endif %}
-
-            <p class="text-white font-semibold">
-                {{ w.mvp_name }}
-            </p>
-        </div>
-
+        {% endfor %}
+        {% endif %}
     </div>
 </div>
-{% endfor %}
-
-{% if not winners %}
-<div class="text-center text-slate-500 py-20">
-    No Hall of Fame data available.
-</div>
-{% endif %}
-
-</section>
-
-<!-- FOOTER -->
-<footer class="border-t border-white/5 bg-slate-950 py-10 text-center text-slate-500">
-    © 2025 COD Champions Cup — GKV
-</footer>
-
-</body>
-</html>
+{% endblock %}

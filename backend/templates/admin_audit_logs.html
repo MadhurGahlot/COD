@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Admin Audit Logs - COD Champions Cup{% endblock %}
+{% block content %}
+<div class="max-w-6xl mx-auto">
+    <div class="flex items-center justify-between mb-12">
+        <div>
+            <h1 class="text-4xl font-black text-white">Audit <span class="text-brand">Logs</span></h1>
+            <p class="text-slate-400 mt-2">Technical Accountability Tracking</p>
+        </div>
+        <a href="/admin/dashboard" class="text-slate-400 hover:text-white transition-colors flex items-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Back to Dashboard
+        </a>
+    </div>
+
+    <div class="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-3xl overflow-hidden shadow-2xl">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead>
+                    <tr class="bg-slate-950 border-b border-slate-800">
+                        <th class="px-8 py-6 text-brand font-bold uppercase text-xs tracking-widest">Timestamp</th>
+                        <th class="px-8 py-6 text-brand font-bold uppercase text-xs tracking-widest">Admin</th>
+                        <th class="px-8 py-6 text-brand font-bold uppercase text-xs tracking-widest">Action</th>
+                        <th class="px-8 py-6 text-brand font-bold uppercase text-xs tracking-widest">Details</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-800/50">
+                    {% for log in logs %}
+                    <tr class="hover:bg-slate-800/30 transition-colors">
+                        <td class="px-8 py-6 font-mono text-sm text-slate-500">
+                            {{ log.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}
+                        </td>
+                        <td class="px-8 py-6">
+                            <span
+                                class="bg-slate-800 text-slate-300 px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider">
+                                {{ log.username }}
+                            </span>
+                        </td>
+                        <td class="px-8 py-6 font-bold text-white uppercase tracking-tight">
+                            {{ log.action }}
+                        </td>
+                        <td class="px-8 py-6 text-slate-400 italic">
+                            {{ log.details }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% if not logs %}
+                    <tr>
+                        <td colspan="4" class="px-8 py-12 text-center text-slate-500 italic">
+                            No logs recorded yet. Perform an admin action to see them here.
+                        </td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

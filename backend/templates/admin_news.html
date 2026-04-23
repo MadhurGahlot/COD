@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <h1 class="text-3xl mb-8 text-brand">Post News Updates</h1>
+
+    <div class="bg-slate-900 p-8 rounded-2xl border border-slate-800 mb-12">
+        <form method="POST" enctype="multipart/form-data">
+            <div class="mb-6">
+                <label class="block text-slate-400 mb-2">Headline</label>
+                <input type="text" name="title" required
+                    class="w-full bg-slate-950 border border-slate-800 p-3 rounded-lg">
+            </div>
+            <div class="mb-6">
+                <label class="block text-slate-400 mb-2">Content</label>
+                <textarea name="content" rows="6" required
+                    class="w-full bg-slate-950 border border-slate-800 p-3 rounded-lg"></textarea>
+            </div>
+            <div class="mb-6">
+                <label class="block text-slate-400 mb-2">Featured Image</label>
+                <input type="file" name="image" class="w-full text-slate-400">
+            </div>
+            <button type="submit" class="bg-brand px-8 py-3 rounded-lg font-bold">Post News</button>
+        </form>
+    </div>
+
+    <div class="space-y-6">
+        <h2 class="text-xl font-bold mb-4">Past News</h2>
+        {% for item in news %}
+        <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 flex justify-between gap-6">
+            <div class="flex-grow">
+                <h3 class="text-xl font-bold mb-2">{{ item.title }}</h3>
+                <p class="text-slate-500 text-sm mb-4">{{ item.created_at }}</p>
+                <p class="text-slate-400 line-clamp-2">{{ item.content }}</p>
+            </div>
+            <a href="{{ url_for('delete_news', nid=item.id) }}" class="text-red-500 font-bold self-start"
+                onclick="return confirm('Delete news?')">Delete</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

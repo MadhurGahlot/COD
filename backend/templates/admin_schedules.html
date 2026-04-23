@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <h1 class="text-3xl mb-8 text-brand">Manage Match Fixtures</h1>
+
+    <div class="bg-slate-900 p-8 rounded-2xl border border-slate-800 mb-12">
+        <h2 class="text-xl mb-6 font-bold">Create New Fixture</h2>
+        <form method="POST">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div>
+                    <label class="block text-slate-400 mb-2">Team A</label>
+                    <select name="team_a" required class="w-full bg-slate-950 border border-slate-800 p-3 rounded-lg">
+                        {% for team in teams %}
+                        <option value="{{ team.id }}">{{ team.team_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-slate-400 mb-2">Team B</label>
+                    <select name="team_b" required class="w-full bg-slate-950 border border-slate-800 p-3 rounded-lg">
+                        {% for team in teams %}
+                        <option value="{{ team.id }}">{{ team.team_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div>
+                    <label class="block text-slate-400 mb-2">Match Date & Time</label>
+                    <input type="datetime-local" name="match_time" required
+                        class="w-full bg-slate-950 border border-slate-800 p-3 rounded-lg">
+                </div>
+                <div>
+                    <label class="block text-slate-400 mb-2">Description / Round</label>
+                    <input type="text" name="description" placeholder="e.g. Quarter Finals"
+                        class="w-full bg-slate-950 border border-slate-800 p-3 rounded-lg">
+                </div>
+            </div>
+            <button type="submit" class="bg-brand px-8 py-3 rounded-lg font-bold">Add Fixture</button>
+        </form>
+    </div>
+
+    <div class="space-y-4">
+        <h2 class="text-xl font-bold mb-4">Upcoming Fixtures</h2>
+        {% for s in schedules %}
+        <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 flex justify-between items-center">
+            <div>
+                <p class="text-brand font-bold uppercase text-sm mb-1">{{ s.description }}</p>
+                <h3 class="text-xl font-bold">{{ s.team_a_name }} vs {{ s.team_b_name }}</h3>
+                <p class="text-slate-500">{{ s.match_time }}</p>
+            </div>
+            <a href="{{ url_for('delete_schedule', sid=s.id) }}" class="text-red-500 hover:text-red-400 font-bold"
+                onclick="return confirm('Delete this schedule?')">Delete</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

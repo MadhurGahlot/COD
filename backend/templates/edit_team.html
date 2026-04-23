@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-md mx-auto bg-slate-900 p-8 rounded-2xl shadow-2xl border border-slate-800">
+    <h1 class="text-3xl mb-6 text-brand">Edit Team</h1>
+    <form method="POST">
+        <div class="mb-6">
+            <label class="block text-slate-400 mb-2">Team Name</label>
+            <input type="text" name="team_name" value="{{ team.team_name }}" required
+                class="w-full bg-slate-950 border border-slate-800 p-3 rounded-lg focus:outline-none focus:border-brand">
+        </div>
+        <div class="flex gap-4">
+            <button type="submit"
+                class="flex-grow bg-brand hover:bg-brand/90 text-white font-bold py-3 rounded-lg transition-all">
+                Save Changes
+            </button>
+            <a href="{{ url_for('admin_teams') }}"
+                class="flex-grow text-center border border-slate-700 hover:bg-slate-800 py-3 rounded-lg font-bold">
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

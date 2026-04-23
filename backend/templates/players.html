@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Players - COD Champions Cup{% endblock %}
+{% block content %}
+<div class="max-w-6xl mx-auto">
+    <div class="text-center mb-16">
+        <h1 class="text-5xl md:text-7xl font-black text-white mb-4">Tournament <span class="text-brand">Players</span>
+        </h1>
+        <p class="text-slate-400 uppercase tracking-widest text-sm font-semibold">Active Players for Season {{
+            session.selected_year }}</p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+        {% if not players %}
+        <div class="col-span-full bg-slate-900 p-12 rounded-3xl text-center text-slate-500 border border-slate-800">
+            No players have registered for this season yet.
+        </div>
+        {% else %}
+        {% for p in players %}
+        <div
+            class="bg-slate-900 border border-slate-800 rounded-[2.5rem] p-6 hover:border-brand/40 transition-all group relative overflow-hidden flex flex-col items-center">
+            <!-- Background Glow -->
+            <div
+                class="absolute -top-10 -right-10 w-32 h-32 bg-brand/5 rounded-full group-hover:bg-brand/10 transition-colors">
+            </div>
+
+            <!-- Player Photo -->
+            <div class="relative mb-6">
+                <div
+                    class="w-28 h-28 rounded-3xl overflow-hidden border-2 border-slate-800 group-hover:border-brand/50 transition-all shadow-2xl">
+                    {% if p.photo %}
+                    <img src="{{ url_for('static', filename='player_photos/' + p.photo) }}" alt="{{ p.player_name }}"
+                        class="w-full h-full object-cover">
+                    {% else %}
+                    <div class="w-full h-full bg-slate-800 flex items-center justify-center">
+                        <svg class="w-12 h-12 text-slate-600" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                        </svg>
+                    </div>
+                    {% endif %}
+                </div>
+                <!-- Status Badge -->
+                <div
+                    class="absolute -bottom-2 -right-2 bg-emerald-500 w-6 h-6 rounded-full border-4 border-slate-900 flex items-center justify-center">
+                    <div class="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></div>
+                </div>
+            </div>
+
+            <!-- Player Info -->
+            <div class="text-center w-full">
+                <h3 class="text-xl font-bold text-white mb-1 truncate">{{ p.player_name }}</h3>
+                <p class="text-brand text-xs font-black uppercase tracking-tighter mb-4">{{ p.team_name if p.team_name
+                    else 'FREE AGENT' }}</p>
+
+                <!-- Mini Stats -->
+                <div class="grid grid-cols-2 gap-3 mb-6 bg-slate-950/50 p-4 rounded-2xl border border-slate-800/50">
+                    <div class="text-center">
+                        <p class="text-[10px] text-slate-500 uppercase font-black tracking-widest leading-none mb-1">K/D
+                        </p>
+                        <p class="text-lg font-bold text-white">{{ "%.2f"|format(p.kd_ratio or 0) }}</p>
+                    </div>
+                    <div class="text-center border-l border-slate-800">
+                        <p class="text-[10px] text-slate-500 uppercase font-black tracking-widest leading-none mb-1">
+                            Kills</p>
+                        <p class="text-lg font-bold text-white">{{ p.kills or 0 }}</p>
+                    </div>
+                </div>
+
+                <a href="{{ url_for('player_profile', player_id=p.id) }}"
+                    class="inline-block w-full bg-slate-800 hover:bg-brand text-white text-sm font-bold py-3 rounded-xl transition-all">
+                    View Details
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

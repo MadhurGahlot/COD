@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Register Profile - COD Champions Cup{% endblock %}
+{% block content %}
+<div class="max-w-2xl mx-auto bg-slate-900 p-8 rounded-2xl shadow-2xl border border-slate-800">
+    <h1 class="text-3xl mb-6 text-brand">Player Profile Registration</h1>
+    <p class="text-slate-400 mb-8">Enter your tournament details. An admin will assign you to a team after review.</p>
+
+    <form method="POST" enctype="multipart/form-data">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div>
+                <label class="block text-slate-400 mb-2">Full Name</label>
+                <input type="text" name="player_name" required
+                    class="w-full bg-slate-950 border border-slate-800 p-3 rounded-lg focus:outline-none focus:border-brand">
+            </div>
+            <div>
+                <label class="block text-slate-400 mb-2">COD Name (Gamertag)</label>
+                <input type="text" name="cod_name" required
+                    class="w-full bg-slate-950 border border-slate-800 p-3 rounded-lg focus:outline-none focus:border-brand">
+            </div>
+        </div>
+        <div class="mb-6">
+            <label class="block text-slate-400 mb-2">Email Address</label>
+            <input type="email" name="email" required
+                class="w-full bg-slate-950 border border-slate-800 p-3 rounded-lg focus:outline-none focus:border-brand">
+        </div>
+        <div class="mb-6">
+            <label class="block text-slate-400 mb-2">Profile Photo</label>
+            <input type="file" name="photo"
+                class="w-full text-slate-400 file:bg-slate-800 file:border-none file:text-white file:px-4 file:py-2 file:rounded-lg file:mr-4 file:cursor-pointer">
+        </div>
+        <button type="submit"
+            class="bg-brand hover:bg-brand/90 text-white font-bold px-8 py-3 rounded-lg transition-all">
+            Submit Registration
+        </button>
+    </form>
+</div>
+{% endblock %}

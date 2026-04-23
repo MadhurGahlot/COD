@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <h1 class="text-3xl mb-8 text-brand">Assign Pending Players</h1>
+
+    {% if not pending %}
+    <div class="bg-slate-900 p-8 rounded-2xl text-center text-slate-400 border border-slate-800">
+        No pending registrations at the moment.
+    </div>
+    {% else %}
+    <div class="grid grid-cols-1 gap-6">
+        {% for player in pending %}
+        <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 flex flex-col md:flex-row items-center gap-6">
+            <div class="w-20 h-20 bg-slate-800 rounded-full overflow-hidden flex-shrink-0">
+                {% if player.photo %}
+                <img src="{{ url_for('static', filename='player_photos/' + player.photo) }}"
+                    class="w-full h-full object-cover">
+                {% else %}
+                <div class="flex items-center justify-center h-full text-slate-500">?</div>
+                {% endif %}
+            </div>
+            <div class="flex-grow">
+                <h3 class="text-xl font-bold">{{ player.player_name }} ({{ player.cod_name }})</h3>
+                <p class="text-slate-500">User: {{ player.username }} | Email: {{ player.email }}</p>
+            </div>
+            <form method="POST" class="flex gap-3 items-center">
+                <input type="hidden" name="player_id" value="{{ player.id }}">
+                <select name="team_id" required
+                    class="bg-slate-950 border border-slate-800 p-3 rounded-lg focus:outline-none focus:border-brand">
+                    <option value="" disabled selected>Select Team</option>
+                    {% for team in teams %}
+                    <option value="{{ team.id }}">{{ team.team_name }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="bg-brand px-6 py-3 rounded-lg font-bold hover:bg-brand/90 transition-all">
+                    Assign
+                </button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

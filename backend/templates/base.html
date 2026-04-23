@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,18 +11,19 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Oswald:wght@500;700&display=swap"
+        rel="stylesheet">
 
     <style type="text/tailwindcss">
         @theme {
             --font-sans: 'Inter', sans-serif;
             --font-display: 'Oswald', sans-serif;
-            --color-brand: #6366f1;
+            --color-brand: #f97316;
         }
 
         body {
             @apply bg-slate-950 text-slate-200 font-sans antialiased min-h-screen flex flex-col;
-            background-image: radial-gradient(circle at 50% 0%, #1e1b4b 0%, #020617 70%);
+            background-image: radial-gradient(circle at 50% 0%, #3b1d00 0%, #020617 75%);
         }
 
         h1 {
@@ -31,24 +33,62 @@
         .scrollbar-custom::-webkit-scrollbar { height: 8px; }
         .scrollbar-custom::-webkit-scrollbar-track { background: #0f172a; }
         .scrollbar-custom::-webkit-scrollbar-thumb {
-            background: #334155;
+            background: #431407;
             border-radius: 4px;
         }
         .scrollbar-custom::-webkit-scrollbar-thumb:hover {
-            background: #475569;
+            background: #7c2d12;
+        }
+
+        /* PREMIUM HOVER EFFECTS */
+        .premium-card {
+            @apply transition-all duration-500 border border-slate-800 bg-slate-900 overflow-hidden relative;
+        }
+        .premium-card:hover {
+            @apply border-brand/50 shadow-2xl;
+            box-shadow: 0 0 40px -10px rgba(249, 115, 22, 0.2);
+            transform: translateY(-5px);
+        }
+        .premium-card .zoom-img {
+            @apply transition-transform duration-700 w-full h-full object-cover;
+        }
+        .premium-card:hover .zoom-img {
+            @apply scale-110 brightness-110;
+        }
+        
+        .player-card-circle {
+            @apply transition-all duration-500 border-4 border-brand/20 rounded-full overflow-hidden;
+        }
+        .premium-card:hover .player-card-circle {
+            @apply border-brand scale-110 shadow-lg shadow-brand/20;
         }
     </style>
 </head>
 
 <body>
 
-{% include "components/navbar.html" %}
+    {% include "components/navbar.html" %}
 
-<main class="flex-grow container mx-auto px-4 py-12">
-    {% block content %}{% endblock %}
-</main>
+    <div class="container mx-auto px-4 mt-8">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div
+            class="p-4 mb-4 rounded-xl border border-{{ 'brand' if category == 'success' else 'red-500' }}/20 bg-{{ 'brand' if category == 'success' else 'red-500' }}/10 text-{{ 'brand' if category == 'success' else 'white' }} font-bold shadow-lg">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+    </div>
 
-{% include "components/footer.html" %}
+    <main class="flex-grow container mx-auto px-4 py-12">
+        {% block content %}{% endblock %}
+    </main>
 
+    {% include "components/footer.html" %}
+
+    {% block scripts %}{% endblock %}
 </body>
+
 </html>

@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% block title %}Manage Brackets - COD Champions Cup{% endblock %}
+{% block content %}
+<div class="max-w-6xl mx-auto">
+    <div class="flex items-center justify-between mb-12">
+        <h1 class="text-4xl text-brand uppercase font-black italic">Manage Brackets</h1>
+        <a href="/brackets" class="text-slate-400 hover:text-white transition-colors">View Public Brackets</a>
+    </div>
+
+    <!-- Define Match Form -->
+    <div class="bg-slate-900 border border-slate-800 rounded-[2.5rem] p-10 mb-12 shadow-2xl">
+        <h3 class="text-xl font-bold mb-8 uppercase tracking-widest text-slate-400">Define Match</h3>
+        <form method="POST" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <input type="hidden" name="action" value="add">
+
+            <div>
+                <label class="block text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2">Round
+                    Name</label>
+                <input type="text" name="round_name" placeholder="e.g. Quarter-Finals" required
+                    class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:border-brand outline-none">
+            </div>
+
+            <div>
+                <label class="block text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2">Match
+                    Index</label>
+                <input type="number" name="match_index" placeholder="1, 2, 3..." required
+                    class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:border-brand outline-none">
+            </div>
+
+            <div>
+                <label class="block text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2">Next Match ID
+                    (Optional)</label>
+                <input type="number" name="next_match_id" placeholder="ID of future match"
+                    class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:border-brand outline-none">
+            </div>
+
+            <div>
+                <label class="block text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2">Team
+                    Alpha</label>
+                <select name="team_a"
+                    class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:border-brand outline-none">
+                    <option value="">TBD</option>
+                    {% for team in teams %}
+                    <option value="{{ team.id }}">{{ team.team_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2">Team
+                    Bravo</label>
+                <select name="team_b"
+                    class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:border-brand outline-none">
+                    <option value="">TBD</option>
+                    {% for team in teams %}
+                    <option value="{{ team.id }}">{{ team.team_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="flex items-end">
+                <button type="submit"
+                    class="w-full bg-brand text-slate-950 font-black uppercase tracking-widest py-3 rounded-xl hover:scale-[1.02] transition-transform">Save
+                    Match</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Defined Matches Table -->
+    <div class="bg-slate-900 border border-slate-800 rounded-[2.5rem] overflow-hidden shadow-2xl">
+        <table class="w-full text-left">
+            <thead>
+                <tr class="bg-slate-950 border-b border-slate-800">
+                    <th class="px-8 py-6 text-brand font-black uppercase text-xs">ID</th>
+                    <th class="px-8 py-6 text-brand font-black uppercase text-xs">Round</th>
+                    <th class="px-8 py-6 text-brand font-black uppercase text-xs">Matchup</th>
+                    <th class="px-8 py-6 text-brand font-black uppercase text-xs">Winner</th>
+                    <th class="px-8 py-6 text-brand font-black uppercase text-xs text-right">Action</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800/50">
+                {% for match in matches %}
+                <tr class="hover:bg-slate-800/20 transition-colors">
+                    <td class="px-8 py-6 font-mono text-slate-500">{{ match.id }}</td>
+                    <td class="px-8 py-6 font-bold text-white italic uppercase tracking-tighter">{{ match.round_name }}
+                        idx:{{ match.match_index }}</td>
+                    <td class="px-8 py-6">
+                        <span
+                            class="{{ 'text-brand' if match.winner_team_id == match.team_a_id else 'text-slate-300' }}">{{
+                            match.team_a_name or 'TBD' }}</span>
+                        <span class="mx-2 text-slate-600 font-black">VS</span>
+                        <span
+                            class="{{ 'text-brand' if match.winner_team_id == match.team_b_id else 'text-slate-300' }}">{{
+                            match.team_b_name or 'TBD' }}</span>
+                    </td>
+                    <td class="px-8 py-6">
+                        {% if match.winner_name %}
+                        <span
+                            class="bg-brand/10 text-brand px-3 py-1 rounded-lg text-xs font-black uppercase tracking-widest">{{
+                            match.winner_name }}</span>
+                        {% else %}
+                        <span class="text-slate-600 italic text-xs uppercase font-black">Pending</span>
+                        {% endif %}
+                    </td>
+                    <td class="px-8 py-6 text-right">
+                        <form method="POST" class="flex items-center gap-2 justify-end">
+                            <input type="hidden" name="action" value="set_winner">
+                            <input type="hidden" name="match_id" value="{{ match.id }}">
+                            <select name="winner_id" required
+                                class="bg-slate-950 border border-slate-800 rounded-lg px-3 py-1 text-xs text-white outline-none">
+                                <option value="">Select Winner</option>
+                                {% if match.team_a_id %}
+                                <option value="{{ match.team_a_id }}">{{ match.team_a_name }}</option>
+                                {% endif %}
+                                {% if match.team_b_id %}
+                                <option value="{{ match.team_b_id }}">{{ match.team_b_name }}</option>
+                                {% endif %}
+                            </select>
+                            <button type="submit"
+                                class="bg-slate-800 hover:bg-brand hover:text-slate-950 px-3 py-1 rounded-lg text-xs font-black uppercase transition-all">PROMOTE</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Match Fixtures - COD Champions Cup{% endblock %}
+{% block content %}
+<div class="max-w-5xl mx-auto">
+    <div class="text-center mb-16">
+        <h1 class="text-5xl mb-4">Tournament <span class="text-brand">Fixtures</span></h1>
+        <p class="text-slate-400 max-w-2xl mx-auto">Never miss a match. Mark your calendars for the upcoming tactical
+            showdowns.</p>
+    </div>
+
+    <div class="grid grid-cols-1 gap-8">
+        {% if not schedules %}
+        <div class="bg-slate-900 p-12 rounded-3xl text-center text-slate-500 border border-slate-800">
+            No fixtures announced yet for this season.
+        </div>
+        {% else %}
+        {% for s in schedules %}
+        <div
+            class="bg-slate-900/50 p-8 rounded-3xl border border-slate-800 flex flex-col md:flex-row items-center gap-8 hover:border-brand/30 transition-all group">
+            <div class="text-center md:text-left">
+                <p class="text-brand font-bold uppercase tracking-widest text-sm mb-2">{{ s.description or 'REGULAR
+                    MATCH' }}</p>
+                <p class="text-slate-400">{{ s.match_time.strftime('%b %d, %Y') }} at {{ s.match_time.strftime('%H:%M')
+                    }}</p>
+            </div>
+
+            <div class="flex-grow flex items-center justify-center gap-6 md:gap-12">
+                <div class="text-center w-32">
+                    <div class="text-xl font-bold uppercase truncate">{{ s.team_a_name }}</div>
+                    <div class="text-slate-500 text-xs mt-1">HOME</div>
+                </div>
+                <div class="text-3xl font-display text-slate-700">VS</div>
+                <div class="text-center w-32">
+                    <div class="text-xl font-bold uppercase truncate">{{ s.team_b_name }}</div>
+                    <div class="text-slate-500 text-xs mt-1">AWAY</div>
+                </div>
+            </div>
+
+            <div class="md:border-l border-slate-800 md:pl-8">
+                <button
+                    class="bg-brand/10 text-brand px-6 py-2 rounded-lg font-bold border border-brand/20 group-hover:bg-brand group-hover:text-white transition-all">
+                    REMIND ME
+                </button>
+            </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

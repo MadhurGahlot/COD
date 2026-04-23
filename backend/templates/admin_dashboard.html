@@ -1,112 +1,103 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
-            font-family: 'Segoe UI', Arial, sans-serif;
-            color: white;
-            text-align: center;
-        }
-
-        h1 {
-            margin-top: 40px;
-            font-size: 38px;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            text-shadow: 0 0 10px #ff003c, 0 0 20px #ff003c;
-        }
-
-        .dashboard-container {
-            margin-top: 50px;
-            display: grid;
-            width: 90%;
-            margin-left: auto;
-            margin-right: auto;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 25px;
-        }
-
-        .dash-card {
-            padding: 25px;
-            border-radius: 12px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid #ff003c88;
-            cursor: pointer;
-            transition: 0.4s;
-            backdrop-filter: blur(6px);
-            box-shadow: 0 0 12px #ff003c55;
-        }
-
-        .dash-card:hover {
-            transform: translateY(-8px);
-            border-color: #ff003c;
-            box-shadow: 0 0 25px #ff003c;
-        }
-
-        h3 {
-            font-size: 22px;
-            margin: 0;
-        }
-
-        button {
-            margin-top: 40px;
-            padding: 12px 25px;
-            background: #ff003c;
-            border: none;
-            color: white;
-            font-size: 18px;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background: #d60032;
-        }
-    </style>
-</head>
-<body>
-
-<h1>🎮 Admin Dashboard</h1>
-
-<div class="dashboard-container">
-
-    <div class="dash-card" onclick="location.href='/admin/teams'">
-        <h3>👥 Manage Teams</h3>
+{% extends "base.html" %}
+{% block title %}Admin Dashboard - COD Champions Cup{% endblock %}
+{% block content %}
+<div class="max-w-6xl mx-auto">
+    <div class="flex items-center justify-between mb-12">
+        <h1 class="text-4xl text-brand">Admin Console</h1>
+        <div class="flex gap-4">
+            <form action="{{ url_for('admin_set_year') }}" method="POST" class="flex items-center gap-2">
+                <select name="year" onchange="this.form.submit()"
+                    class="bg-slate-900 border border-slate-700 rounded-lg px-4 py-2">
+                    {% for y in range(2024, now.year + 1) %}
+                    <option value="{{ y }}" {{ 'selected' if session.selected_year==y }}>Season {{ y }}</option>
+                    {% endfor %}
+                </select>
+            </form>
+            <a href="{{ url_for('logout') }}"
+                class="bg-red-500/10 text-red-500 border border-red-500/20 px-4 py-2 rounded-lg font-bold">Logout</a>
+        </div>
     </div>
 
-    <div class="dash-card" onclick="location.href='/admin/players'">
-        <h3>🎮 Manage Players</h3>
-    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Teams -->
+        <a href="{{ url_for('admin_teams') }}"
+            class="bg-slate-900 p-8 rounded-2xl border border-slate-800 hover:border-brand transition-all group">
+            <div class="text-3xl mb-4">👥</div>
+            <h3 class="text-xl font-bold mb-2">Manage Teams</h3>
+            <p class="text-slate-500 text-sm">Upload and manage tournament teams.</p>
+        </a>
 
-    <div class="dash-card" onclick="location.href='/admin/matches'">
-        <h3>⚔️ Team vs Team Match Entry</h3>
-    </div>
+        <!-- Players -->
+        <a href="{{ url_for('admin_players') }}"
+            class="bg-slate-900 p-8 rounded-2xl border border-slate-800 hover:border-brand transition-all group">
+            <div class="text-3xl mb-4">🎮</div>
+            <h3 class="text-xl font-bold mb-2">Manage Players</h3>
+            <p class="text-slate-500 text-sm">Upload player profiles and manage accounts.</p>
+        </a>
 
-    <div class="dash-card" onclick="location.href='/admin/add_match'">
-        <h3>📊 Add Match Result</h3>
-    </div>
+        <!-- Match Results -->
+        <a href="{{ url_for('add_match') }}"
+            class="bg-slate-900 p-8 rounded-2xl border border-slate-800 hover:border-brand transition-all group">
+            <div class="text-3xl mb-4">📊</div>
+            <h3 class="text-xl font-bold mb-2">Points Table Audit</h3>
+            <p class="text-slate-500 text-sm">Update and verify player match stats.</p>
+        </a>
 
-    <div class="dash-card" onclick="location.href='/leaderboard'">
-        <h3>🏆 Leaderboard</h3>
-    </div>
+        <!-- Assign Players -->
+        <a href="{{ url_for('assign_players') }}"
+            class="bg-slate-900 p-8 rounded-2xl border border-slate-800 border-dashed hover:border-brand transition-all group">
+            <div class="text-3xl mb-4">🤝</div>
+            <h3 class="text-xl font-bold mb-2">Assign Players</h3>
+            <p class="text-slate-500 text-sm">Approve new registrations.</p>
+        </a>
 
-    <div class="dash-card" onclick="location.href='/admin/winners'">
-        <h3>🥇 Hall of Fame (Winners)</h3>
-    </div>
+        <!-- Fixtures -->
+        <a href="{{ url_for('admin_schedules') }}"
+            class="bg-slate-900 p-8 rounded-2xl border border-slate-800 hover:border-brand transition-all group">
+            <div class="text-3xl mb-4">📅</div>
+            <h3 class="text-xl font-bold mb-2">Fixtures</h3>
+            <p class="text-slate-500 text-sm">Plan upcoming matches.</p>
+        </a>
 
-    <div class="dash-card" onclick="location.href='/admin/home_settings'">
-        <h3> EDIT HOME </h3>
-    </div>
+        <!-- Brackets -->
+        <a href="{{ url_for('admin_brackets') }}"
+            class="bg-slate-900 p-8 rounded-2xl border border-slate-800 hover:border-brand transition-all group">
+            <div class="text-3xl mb-4">🌳</div>
+            <h3 class="text-xl font-bold mb-2">Manage Brackets</h3>
+            <p class="text-slate-500 text-sm">Define tournament tree and promote winners.</p>
+        </a>
 
+        <!-- News -->
+        <a href="{{ url_for('admin_news') }}"
+            class="bg-slate-900 p-8 rounded-2xl border border-slate-800 hover:border-brand transition-all group">
+            <div class="text-3xl mb-4">📰</div>
+            <h3 class="text-xl font-bold mb-2">News</h3>
+            <p class="text-slate-500 text-sm">Broadcast tournament updates.</p>
+        </a>
+
+        <!-- Winners -->
+        <a href="{{ url_for('admin_winners') }}"
+            class="bg-slate-900 p-8 rounded-2xl border border-slate-800 hover:border-brand transition-all group">
+            <div class="text-3xl mb-4">🏆</div>
+            <h3 class="text-xl font-bold mb-2">Tournament History</h3>
+            <p class="text-slate-500 text-sm">Manage the Hall of Fame.</p>
+        </a>
+
+        <!-- Audit Logs -->
+        <a href="{{ url_for('admin_audit_logs') }}"
+            class="bg-slate-900 p-8 rounded-2xl border border-slate-800 hover:border-brand transition-all group">
+            <div class="text-3xl mb-4">📜</div>
+            <h3 class="text-xl font-bold mb-2">Audit Logs</h3>
+            <p class="text-slate-500 text-sm">Review technical accountability trails.</p>
+        </a>
+
+        <!-- Home Settings -->
+        <a href="{{ url_for('admin_home_settings') }}"
+            class="bg-slate-900 p-8 rounded-2xl border border-slate-800 hover:border-brand transition-all group">
+            <div class="text-3xl mb-4">🏠</div>
+            <h3 class="text-xl font-bold mb-2">Home Settings</h3>
+            <p class="text-slate-500 text-sm">Customize titles and featured content.</p>
+        </a>
+    </div>
 </div>
-
-<button onclick="location.href='/admin/logout'">Logout</button>
-<button onclick="location.href='/'">Home</button>
-
-</body>
-</html>
+{% endblock %}

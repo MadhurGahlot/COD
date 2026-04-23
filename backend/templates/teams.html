@@ -1,137 +1,47 @@
-<!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Teams — COD Champions Cup</title>
-
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
-
-    <style type="text/tailwindcss">
-        @theme {
-            --font-sans: 'Inter', sans-serif;
-            --font-display: 'Oswald', sans-serif;
-        }
-
-        body {
-            @apply bg-slate-950 text-slate-200 font-sans antialiased min-h-screen;
-            background-image: radial-gradient(circle at 50% 0%, #1e1b4b 0%, #020617 70%);
-        }
-
-        h1, h2 {
-            @apply font-display uppercase tracking-wider;
-        }
-        
-    </style>
-</head>
-
-<body>
-
-<!-- NAVBAR -->
-<nav class="w-full flex items-center justify-between px-6 py-4
-            border-b border-white/5 bg-slate-950/60 backdrop-blur-md
-            sticky top-0 z-50">
-
-    <div class="flex items-center gap-3">
-        <img src="/static/logo.png"
-             class="h-10 w-10 rounded-full border border-white/10">
-        <span class="font-display font-bold text-white text-lg hidden sm:block">
-            COD Champions Cup
-        </span>
+{% extends "base.html" %}
+{% block title %}Teams - COD Champions Cup{% endblock %}
+{% block content %}
+<div class="max-w-6xl mx-auto">
+    <div class="text-center mb-16">
+        <h1 class="text-5xl md:text-7xl font-black text-white mb-4">Tournament <span class="text-brand">Teams</span>
+        </h1>
+        <p class="text-slate-400 uppercase tracking-widest text-sm font-semibold">Registered Teams for Season {{
+            session.selected_year }}</p>
     </div>
 
-    <div class="flex gap-6 font-semibold text-sm">
-        <a href="/" class="hover:text-indigo-400">Home</a>
-        <a href="/teams" class="text-indigo-400">Teams</a>
-        <a href="/leaderboard" class="hover:text-indigo-400">Leaderboard</a>
-        <a href="/matches" class="hover:text-indigo-400">Matches</a>
-    </div>
-</nav>
-
-<!-- PAGE HEADER -->
-<section class="text-center mt-20 mb-16 px-6">
-    <h1 class="text-4xl md:text-6xl font-black text-white mb-3 drop-shadow-lg">
-        Teams
-    </h1>
-    <p class="text-slate-400 uppercase tracking-widest text-sm font-semibold">
-        Registered Squads
-    </p>
-</section>
-
-<!-- TEAMS GRID -->
-<section class="max-w-7xl mx-auto px-6 pb-24">
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+        {% if not teams %}
+        <div class="col-span-full bg-slate-900 p-12 rounded-3xl text-center text-slate-500 border border-slate-800">
+            No teams have registered for this season yet.
+        </div>
+        {% else %}
         {% for t in teams %}
-        <div class="bg-slate-900/50 backdrop-blur-xl border border-white/5
-                    rounded-2xl p-6 shadow-xl hover:scale-[1.02]
-                    transition group">
-
-            <!-- TEAM LOGO / ICON -->
-            <div class="h-20 w-20 mx-auto mb-4 rounded-full
-                        bg-indigo-500/10 border border-indigo-500/30
-                        flex items-center justify-center
-                        text-indigo-400 font-display font-black text-2xl">
-                {{ t.team_name[0] }}
+        <div
+            class="bg-slate-900 border border-slate-800 rounded-[2.5rem] p-8 hover:border-brand/40 transition-all group relative overflow-hidden">
+            <div
+                class="absolute -top-10 -right-10 w-32 h-32 bg-brand/5 rounded-full group-hover:bg-brand/10 transition-colors">
             </div>
 
-            <!-- TEAM NAME -->
-            <h3 class="text-center text-white font-bold text-lg mb-1">
-                {{ t.team_name }}
-            </h3>
+            <div class="flex flex-col items-center text-center">
+                <div
+                    class="w-20 h-20 bg-slate-950 rounded-3xl border border-slate-800 flex items-center justify-center font-display text-3xl font-bold text-brand mb-6 shadow-xl">
+                    {{ t.team_name[0] | upper }}
+                </div>
 
-            <!-- STATS -->
-            <div class="text-center text-slate-400 text-sm space-y-1 mt-3">
-                <p>Players: <span class="text-white font-semibold">{{ t.total_players }}</span></p>
-                <p>Wins: <span class="text-emerald-400 font-semibold">{{ t.wins }}</span></p>
-                <p>Losses: <span class="text-rose-400 font-semibold">{{ t.losses }}</span></p>
+                <h3 class="text-2xl font-bold mb-2">{{ t.team_name }}</h3>
+                <div class="flex items-center gap-2 text-slate-500 text-sm mb-8">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    {{ t.player_count }} Active Player
+                </div>
+
+                <a href="{{ url_for('team_details', team_id=t.id) }}"
+                    class="w-full bg-slate-800 hover:bg-brand text-white font-bold py-3 rounded-2xl transition-all shadow-lg">
+                    View Details
+                </a>
             </div>
-
-            <!-- ACTION -->
-            <a href="/team/{{ t.id }}"
-               class="mt-5 block text-center py-2 rounded-lg
-                      bg-indigo-600/10 border border-indigo-500/30
-                      text-indigo-300 font-semibold
-                      hover:bg-indigo-500/20 transition">
-                View Team
-            </a>
         </div>
         {% endfor %}
-
-        {% if not teams %}
-        <div class="col-span-full text-center text-slate-500 py-20">
-            No teams registered yet.
-        </div>
         {% endif %}
-
     </div>
-</section>
-<a href="/"
-   class="fixed bottom-6 left-6 z-50
-          flex items-center gap-2 px-4 py-3 rounded-full
-          bg-indigo-600 hover:bg-indigo-500
-          text-white font-bold shadow-xl transition">
-
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
-         fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round"
-              d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
-    </svg>
-
-    Home
-</a>
-
-
-<!-- FOOTER -->
-<footer class="border-t border-white/5 bg-slate-950 py-10 text-center text-slate-500">
-    <p>© 2025 COD Champions Cup — GKV</p>
-</footer>
-
-</body>
-
-</html>
+</div>
+{% endblock %}

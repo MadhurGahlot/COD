@@ -1,75 +1,52 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Manage Teams</title>
-    <style>
-        body {
-            font-family: Arial;
-            background: #111;
-            color: white;
-            text-align: center;
-        }
-        form {
-            margin-top: 20px;
-        }
-        input[type=text] {
-            padding: 10px;
-            width: 250px;
-            border-radius: 5px;
-            border: none;
-            outline: none;
-        }
-        button {
-            padding: 10px 20px;
-            margin-left: 10px;
-            background: #e63946;
-            border: none;
-            color: white;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        table {
-            margin: auto;
-            margin-top: 40px;
-            width: 60%;
-            border-collapse: collapse;
-            color: white;
-        }
-        th, td {
-            padding: 10px;
-            border-bottom: 1px solid grey;
-        }
-        th {
-            color: #e63946;
-        }
-        a {
-            color: #e63946;
-        }
-    </style>
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}Manage Teams - COD Champions Cup{% endblock %}
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <div class="flex items-center justify-between mb-8">
+        <h1 class="text-3xl text-brand">Manage Teams</h1>
+        <a href="{{ url_for('admin_dashboard') }}" class="text-slate-500 hover:text-white transition-colors">← Back to
+            Dashboard</a>
+    </div>
 
-<h1>Manage Teams</h1>
+    <!-- Upload Team Form -->
+    <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 mb-8">
+        <form method="POST" class="flex gap-4">
+            <input type="text" name="team_name" placeholder="Enter Team Name" required
+                class="flex-grow bg-slate-950 border border-slate-800 p-3 rounded-lg focus:outline-none focus:border-brand">
+            <button type="submit"
+                class="bg-brand px-8 py-3 rounded-lg font-bold hover:bg-brand/90 transition-all">Upload
+                Team</button>
+        </form>
+    </div>
 
-<form method="POST">
-    <input type="text" name="team_name" placeholder="Enter Team Name" required>
-    <button type="submit">Add Team</button>
-</form>
-
-<table>
-    <tr>
-        <th>ID</th>
-        <th>Team Name</th>
-    </tr>
-    {% for team in teams %}
-    <tr>
-        <td>{{ team[0] }}</td>
-        <td>{{ team[1] }}</td>
-    </tr>
-    {% endfor %}
-</table>
-
-<button onclick="location.href='/admin/dashboard'">Back to Dashboard</button>
-
-</body>
-</html>
+    <!-- Teams Table -->
+    <div class="bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden">
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="bg-slate-950/50 border-b border-slate-800">
+                    <th class="p-4 text-brand font-bold uppercase text-sm">ID</th>
+                    <th class="p-4 text-brand font-bold uppercase text-sm">Team Name</th>
+                    <th class="p-4 text-brand font-bold uppercase text-sm text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for team in teams %}
+                <tr class="border-b border-slate-800/50 hover:bg-slate-800/30 transition-colors">
+                    <td class="p-4 font-mono text-slate-500 text-sm">{{ team.id }}</td>
+                    <td class="p-4 font-bold">{{ team.team_name }}</td>
+                    <td class="p-4 text-right">
+                        <div class="flex justify-end gap-3">
+                            <a href="{{ url_for('edit_team', team_id=team.id) }}"
+                                class="text-blue-400 hover:text-blue-300 font-bold text-sm">Edit</a>
+                            <a href="{{ url_for('delete_team', team_id=team.id) }}"
+                                class="text-red-400 hover:text-red-300 font-bold text-sm"
+                                onclick="return confirm('Delete this team? This may affect players.')">Delete</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block title %}{{ team.team_name }} Dashboard - COD Champions Cup{% endblock %}
+{% block content %}
+<div class="max-w-6xl mx-auto">
+    <!-- Team Overview -->
+    <div class="bg-slate-900 border border-slate-800 rounded-[3rem] p-12 mb-16 shadow-2xl relative overflow-hidden">
+        <div class="absolute top-0 right-0 p-12 opacity-5 pointer-events-none">
+            <h1 class="text-[12rem] font-black">{{ team.team_name[0] | upper }}</h1>
+        </div>
+
+        <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-12">
+            <div class="flex flex-col md:flex-row items-center gap-12">
+                <div
+                    class="w-24 h-24 bg-slate-950 rounded-3xl border-2 border-brand flex items-center justify-center font-display text-4xl font-bold text-brand shadow-[0_0_20px_rgba(99,102,241,0.2)]">
+                    {{ team.team_name[0] | upper }}
+                </div>
+                <div class="text-center md:text-left">
+                    <h1 class="text-4xl md:text-6xl font-black text-white mb-2">{{ team.team_name }}</h1>
+                    <p class="text-slate-500 uppercase tracking-widest text-xs font-bold">Team Command Centre • Season
+                        {{ team.year }}</p>
+                </div>
+            </div>
+
+            <div class="flex gap-4">
+                <div class="bg-slate-950/50 border border-slate-800 px-6 py-4 rounded-3xl text-center">
+                    <p class="text-[10px] text-slate-500 uppercase font-bold mb-1">Roster Size</p>
+                    <p class="text-2xl font-display text-white">{{ roster | length }}</p>
+                </div>
+                <div class="bg-slate-950/50 border border-slate-800 px-6 py-4 rounded-3xl text-center">
+                    <p class="text-[10px] text-slate-500 uppercase font-bold mb-1">Matches</p>
+                    <p class="text-2xl font-display text-brand">{{ matches | length }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+        <!-- Roster Management -->
+        <div class="lg:col-span-2 space-y-8">
+            <h2 class="text-2xl font-bold flex items-center gap-3">
+                <span class="w-2 h-8 bg-brand rounded-full"></span>
+                Active Player
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {% for p in roster %}
+                <div
+                    class="bg-slate-900 border border-slate-800 rounded-3xl p-6 flex items-center gap-6 hover:border-brand/50 transition-all">
+                    <div class="w-16 h-16 rounded-2xl overflow-hidden border border-slate-800">
+                        <img src="{{ url_for('static', filename='player_photos/' + p.photo if p.photo else 'default_player.png') }}"
+                            class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-white">{{ p.player_name }}</h4>
+                        <p class="text-brand text-xs font-mono">{{ p.cod_name }}</p>
+                        <div class="flex gap-3 mt-2 text-[10px] uppercase font-bold text-slate-500">
+                            <span>K: {{ p.kills }}</span>
+                            <span>D: {{ p.deaths }}</span>
+                            <span class="text-indigo-400">KD: {{ "%.2f"|format(p.kd_ratio) }}</span>
+                        </div>
+                    </div>
+                    <a href="{{ url_for('player_profile', player_id=p.id) }}"
+                        class="ml-auto text-slate-500 hover:text-white">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path d="M9 5l7 7-7 7" />
+                        </svg>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="space-y-8">
+            <h2 class="text-2xl font-bold">Recent Intel</h2>
+            <div class="bg-slate-900 border border-slate-800 rounded-[2rem] p-8 space-y-6">
+                {% if not matches %}
+                <p class="text-slate-500 italic text-sm text-center py-10">No recent match data recorded.</p>
+                {% else %}
+                {% for m in matches %}
+                <div class="pb-6 border-b border-slate-800 last:border-0 last:pb-0">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-[10px] font-bold text-slate-500 uppercase">{{ m.match_time.strftime('%b %d,
+                            %H:%M') }}</span>
+                        <span class="text-xs bg-slate-800 px-2 py-1 rounded text-slate-400">SCHEDULED</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="font-bold {{ 'text-brand' if m.team_a_id == team.id else 'text-white' }}">{{
+                            m.team_a_name }}</span>
+                        <span class="text-slate-600 text-xs font-bold">VS</span>
+                        <span class="font-bold {{ 'text-brand' if m.team_b_id == team.id else 'text-white' }}">{{
+                            m.team_b_name }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+                {% endif %}
+                <a href="{{ url_for('public_schedule') }}"
+                    class="block text-center text-xs font-bold text-brand uppercase tracking-widest pt-4">View All
+                    Schedules →</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
