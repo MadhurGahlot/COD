@@ -1,5 +1,49 @@
+# Byte-compiled / optimized / DLL files
 __pycache__/
-*.pyc
-.env
+*.py[cod]
+*$py.class
+
+# Virtual Environments
 venv/
+.venv/
+env/
+.env/
 codenv/
+codvenv/
+*venv/
+*env/
+
+# Environment variables & secrets (keep .env.example tracked)
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# IDEs & Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Operating System files
+.DS_Store
+Thumbs.db
+desktop.ini
+* - Copy.*
+
+# Unit tests / Cache
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Logs & Local Databases
+*.log
+*.sqlite
+*.sqlite3
+*.db
+
+# Temporary & build files
+dist/
+build/
+*.egg-info/
