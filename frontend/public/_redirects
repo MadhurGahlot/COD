@@ -1,9 +1,2 @@
-/*
- * Cloudflare Pages SPA routing fix.
- * Without this, direct navigation to /players/5 returns a 404 because
- * Cloudflare Pages looks for a file called "players/5/index.html" which
- * doesn't exist in a Vite SPA build.
- * This rule rewrites all routes to index.html so React Router handles them.
- */
-/* index route */ / /index.html 200
-/* SPA fallback */ /* /index.html 200
+# Cloudflare Pages SPA fallback: rewrites all client routes to index.html
+/*    /index.html   200
