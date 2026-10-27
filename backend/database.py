@@ -9,6 +9,8 @@ database_password = os.getenv("Postgre_pass")
 if not database_password:
     raise RuntimeError("'Postgre_pass' is not set in .env — expected a full PostgreSQL connection URL (e.g. postgresql+psycopg2://user:pass@host/db)")
 
+if database_password.startswith("postgres://"):
+    database_password = database_password.replace("postgres://", "postgresql://", 1)
 
 engine = create_engine(
    database_password,
