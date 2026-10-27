@@ -1,0 +1,32 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# render.yaml — Render.com deployment config for the COD Tournament backend
+# https://render.com/docs/yaml-spec
+# ─────────────────────────────────────────────────────────────────────────────
+services:
+  - type: web
+    name: cod-tournament-api
+    runtime: python
+    region: oregon   # change to 'singapore' or 'frankfurt' if you prefer
+    plan: free
+
+    # Build
+    buildCommand: pip install -r requirements.txt
+    startCommand: cd backend && uvicorn main:codapp --host 0.0.0.0 --port $PORT
+
+    # Health check — Render will restart the app if this returns non-200
+    healthCheckPath: /health
+
+    # Auto-deploy on every push to main
+    autoDeploy: true
+
+    # Environment variables — fill in real values in the Render dashboard
+    # (never commit real secrets here)
+    envVars:
+      - key: Postgre_pass
+        sync: false          # must be set manually in dashboard
+      - key: SECRET_KEY
+        sync: false
+      - key: FRONTEND_URL
+        sync: false          # e.g. https://cod-tournament.pages.dev
+      - key: MAX_UPLOAD_SIZE_MB
+        value: "5"

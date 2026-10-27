@@ -2,6 +2,7 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Trophy, Award, Crown, Sparkles, Shield, Medal, Star, Swords } from 'lucide-react';
 import { getWinners, getHallOfFame } from '../api/winners';
+import { staticUrl } from '../api/client';
 import { useTournament } from '../context/TournamentContext';
 import Card, { CardBody } from '../components/ui/Card';
 import Badge from '../components/ui/Badge';
@@ -78,13 +79,13 @@ export default function Winners() {
             const winnerImg = w.winner_photo
               ? w.winner_photo.startsWith('http')
                 ? w.winner_photo
-                : `/static/player_photos/${w.winner_photo}`
+                : staticUrl(`/static/player_photos/${w.winner_photo}`)
               : null;
 
             const mvpImg = w.mvp_photo
               ? w.mvp_photo.startsWith('http')
                 ? w.mvp_photo
-                : `/static/player_photos/${w.mvp_photo}`
+                : staticUrl(`/static/player_photos/${w.mvp_photo}`)
               : null;
 
             return (

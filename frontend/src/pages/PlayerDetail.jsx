@@ -31,6 +31,7 @@ import StatCard from '../components/ui/StatCard';
 import Badge from '../components/ui/Badge';
 import Skeleton, { StatCardSkeleton } from '../components/ui/Skeleton';
 import ErrorState from '../components/ui/ErrorState';
+import { staticUrl } from '../api/client';
 
 export default function PlayerDetail() {
   const { id } = useParams();
@@ -87,7 +88,7 @@ export default function PlayerDetail() {
   const photoUrl = player.photo
     ? player.photo.startsWith('http')
       ? player.photo
-      : `/static/player_photos/${player.photo}`
+      : staticUrl(`/static/player_photos/${player.photo}`)
     : null;
 
   const kills = player.kills ?? 0;

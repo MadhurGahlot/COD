@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { staticUrl } from '../api/client';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import {
@@ -128,7 +129,7 @@ export default function Players() {
             const photoUrl = p.photo
               ? p.photo.startsWith('http')
                 ? p.photo
-                : `/static/player_photos/${p.photo}`
+                : staticUrl(`/static/player_photos/${p.photo}`)
               : null;
 
             return (

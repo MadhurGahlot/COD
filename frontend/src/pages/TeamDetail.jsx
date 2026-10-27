@@ -20,6 +20,7 @@ import Badge from '../components/ui/Badge';
 import Skeleton, { CardSkeleton } from '../components/ui/Skeleton';
 import EmptyState from '../components/ui/EmptyState';
 import ErrorState from '../components/ui/ErrorState';
+import { staticUrl } from '../api/client';
 
 export default function TeamDetail() {
   const { id } = useParams();
@@ -153,7 +154,7 @@ export default function TeamDetail() {
               const photoUrl = p.photo
                 ? p.photo.startsWith('http')
                   ? p.photo
-                  : `/static/player_photos/${p.photo}`
+                  : staticUrl(`/static/player_photos/${p.photo}`)
                 : null;
 
               const playerId = p.player_id || p.id;
