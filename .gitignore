@@ -1,9 +1,28 @@
-# Byte-compiled / optimized / DLL files
+# ==============================================================================
+# Git Ignore Configuration - COD Tournament Platform
+# ==============================================================================
+
+# ── 1. Python & Bytecode ──────────────────────────────────────────────────────
 __pycache__/
+*/__pycache__/
+*/**/__pycache__/
 *.py[cod]
 *$py.class
+*.so
+.Python
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.egg-info/
+*.egg
+build/
+dist/
+*.manifest
+*.spec
 
-# Virtual Environments
+# ── 2. Virtual Environments ───────────────────────────────────────────────────
 venv/
 .venv/
 env/
@@ -12,39 +31,77 @@ codenv/
 codvenv/
 *venv/
 *env/
+CODVENV/
+*CODVENV/
+ENV/
+env.bak/
+venv.bak/
 
-# Environment variables & secrets (keep .env.example tracked)
+# ── 3. Environment Secrets & Configs ──────────────────────────────────────────
+# Strictly ignore secrets, but always track .env.example
 .env
+.env.*
 .env.local
 .env.*.local
+.env.development
+.env.production
+.env.test
 !.env.example
 
-# IDEs & Editors
+# ── 4. Node.js & Frontend Dependencies ────────────────────────────────────────
+node_modules/
+*/node_modules/
+*/**/node_modules/
+.npm/
+.eslintcache
+.vite/
+frontend/.vite/
+.turbo/
+package-lock.json.tmp
+
+# ── 5. Build & Distribution Outputs ───────────────────────────────────────────
+frontend/dist/
+frontend/dist-ssr/
+frontend/build/
+dist-ssr/
+
+# ── 6. User Uploads & Media (Preserve structure via .gitkeep) ─────────────────
+backend/static/player_photos/*
+!backend/static/player_photos/.gitkeep
+
+# ── 7. Databases & Local SQLite Storage ───────────────────────────────────────
+*.sqlite
+*.sqlite3
+*.db
+backend/*.db
+
+# ── 8. Logs & Runtime Files ───────────────────────────────────────────────────
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+*.pid
+*.seed
+*.pid.lock
+
+# ── 9. IDEs, Editors & OS Metadata ────────────────────────────────────────────
 .vscode/
+!.vscode/settings.json
+!.vscode/extensions.json
 .idea/
 *.swp
 *.swo
 *~
-
-# Operating System files
+*.bak
+*.tmp
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
 desktop.ini
 * - Copy.*
-
-# Unit tests / Cache
-.pytest_cache/
-.coverage
-htmlcov/
-
-# Logs & Local Databases
-*.log
-*.sqlite
-*.sqlite3
-*.db
-
-# Temporary & build files
-dist/
-build/
-*.egg-info/
-.json

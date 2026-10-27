@@ -1,1 +1,1 @@
-web: gunicorn --bind 0.0.0.0:${PORT:-8000} --chdir backend app:app
+web: uvicorn main:codapp --host 0.0.0.0 --port ${PORT:-8000} --app-dir backend
