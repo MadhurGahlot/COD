@@ -30,6 +30,7 @@ import Modal from '../../components/ui/Modal';
 import { TableSkeleton } from '../../components/ui/Skeleton';
 import EmptyState from '../../components/ui/EmptyState';
 import ErrorState from '../../components/ui/ErrorState';
+import { staticUrl } from '../../api/client';
 
 export default function AdminPlayers() {
   const { selectedYear } = useTournament();
@@ -291,7 +292,7 @@ export default function AdminPlayers() {
                   const photoUrl = p.photo
                     ? p.photo.startsWith('http')
                       ? p.photo
-                      : `/static/player_photos/${p.photo}`
+                      : staticUrl(`/static/player_photos/${p.photo}`)
                     : null;
 
                   return (

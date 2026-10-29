@@ -4,6 +4,7 @@ import HeroSection from '@/components/ui/hero-01-utils/hero';
 import BrandSlider from '@/components/ui/hero-01-utils/brand-slider';
 import { getTeams } from '@/api/teams';
 import { getPlayers } from '@/api/players';
+import { staticUrl } from '@/api/client';
 
 /**
  * AgencyHeroSection — COD Tournament Edition
@@ -36,7 +37,7 @@ export default function AgencyHeroSection({ year, settings }) {
     image: p.photo
       ? p.photo.startsWith('http')
         ? p.photo
-        : `/static/player_photos/${p.photo}`
+        : staticUrl(`/static/player_photos/${p.photo}`)
       : null,
     name: p.cod_name || p.player_name || 'Operative',
   }));
@@ -46,7 +47,7 @@ export default function AgencyHeroSection({ year, settings }) {
     image: t.logo
       ? t.logo.startsWith('http')
         ? t.logo
-        : `/static/${t.logo}`
+        : staticUrl(`/static/${t.logo}`)
       : null,
     lightimg: null,
     name: t.team_name || 'Squad',

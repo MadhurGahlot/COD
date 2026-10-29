@@ -1,4 +1,5 @@
 import React from 'react';
+import { staticUrl } from '../api/client';
 import { useQuery } from '@tanstack/react-query';
 import { Bell, Calendar, User, ShieldAlert, Sparkles } from 'lucide-react';
 import { getNews } from '../api/news';
@@ -90,7 +91,7 @@ export default function News() {
                 </h2>
                 {item.image && (
                   <img
-                    src={item.image.startsWith('http') ? item.image : `/static/${item.image}`}
+                    src={staticUrl(item.image.startsWith('http') ? item.image : `/static/${item.image}`)}
                     alt={item.title}
                     className="w-full max-h-72 object-cover rounded-xl border border-light-border dark:border-dark-border"
                   />

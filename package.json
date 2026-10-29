@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "python run.py",
     "start": "python run.py",
+    "build": "cd frontend && npm run build",
     "backend": "cd backend && uvicorn main:codapp --reload --host 127.0.0.1 --port 8000",
     "frontend": "python -m http.server 3000 --directory frontend"
   },

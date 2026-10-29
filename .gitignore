@@ -47,6 +47,7 @@ venv.bak/
 .env.production
 .env.test
 !.env.example
+!frontend/.env.example
 
 # ── 4. Node.js & Frontend Dependencies ────────────────────────────────────────
 node_modules/

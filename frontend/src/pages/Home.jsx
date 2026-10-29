@@ -20,6 +20,7 @@ import {
   Crown,
 } from 'lucide-react';
 import { getHome } from '../api/home';
+import { staticUrl } from '../api/client';
 import { useTournament } from '../context/TournamentContext';
 import Card, { CardBody } from '../components/ui/Card';
 import StatCard from '../components/ui/StatCard';
@@ -85,11 +86,11 @@ export default function Home() {
   };
 
   const lightArtwork = settings.hero_background
-    ? (settings.hero_background.startsWith('http') ? settings.hero_background : `/static/${settings.hero_background}`)
+    ? staticUrl(settings.hero_background.startsWith('http') ? settings.hero_background : `/static/${settings.hero_background}`)
     : undefined;
 
   const darkArtwork = settings.hero_dark_image
-    ? (settings.hero_dark_image.startsWith('http') ? settings.hero_dark_image : `/static/${settings.hero_dark_image}`)
+    ? staticUrl(settings.hero_dark_image.startsWith('http') ? settings.hero_dark_image : `/static/${settings.hero_dark_image}`)
     : undefined;
 
   return (
@@ -237,7 +238,7 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {highlights.map((h, i) => {
               const img = h.image || h.image_url;
-              const imgSrc = img ? (img.startsWith('http') ? img : `/static/${img}`) : null;
+              const imgSrc = img ? staticUrl(img.startsWith('http') ? img : `/static/${img}`) : null;
               const rotateClass = i % 2 === 0 ? 'group-hover:rotate-2' : 'group-hover:-rotate-2';
 
               return (

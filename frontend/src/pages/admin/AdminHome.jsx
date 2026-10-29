@@ -27,6 +27,7 @@ import Modal from '../../components/ui/Modal';
 import { CardSkeleton } from '../../components/ui/Skeleton';
 import EmptyState from '../../components/ui/EmptyState';
 import ErrorState from '../../components/ui/ErrorState';
+import { staticUrl } from '../../api/client';
 
 export default function AdminHome() {
   const { selectedYear } = useTournament();
@@ -279,14 +280,14 @@ export default function AdminHome() {
                 heroBgFile
                   ? URL.createObjectURL(heroBgFile)
                   : existingLightImg
-                  ? (existingLightImg.startsWith('http') ? existingLightImg : `/static/${existingLightImg}`)
+                  ? staticUrl(existingLightImg.startsWith('http') ? existingLightImg : `/static/${existingLightImg}`)
                   : undefined
               }
               darkSrc={
                 heroDarkBgFile
                   ? URL.createObjectURL(heroDarkBgFile)
                   : existingDarkImg
-                  ? (existingDarkImg.startsWith('http') ? existingDarkImg : `/static/${existingDarkImg}`)
+                  ? staticUrl(existingDarkImg.startsWith('http') ? existingDarkImg : `/static/${existingDarkImg}`)
                   : undefined
               }
             />
@@ -557,7 +558,7 @@ export default function AdminHome() {
               <Card key={h.id} className="overflow-hidden">
                 {h.image_url && (
                   <img
-                    src={h.image_url.startsWith('http') ? h.image_url : `/static/${h.image_url}`}
+                    src={staticUrl(h.image_url.startsWith('http') ? h.image_url : `/static/${h.image_url}`)}
                     alt={h.title}
                     className="w-full h-32 object-cover"
                   />
@@ -614,7 +615,7 @@ export default function AdminHome() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
             {heroImages.map((img) => {
-              const srcUrl = img.image_url.startsWith('http') ? img.image_url : `/static/${img.image_url}`;
+              const srcUrl = staticUrl(img.image_url.startsWith('http') ? img.image_url : `/static/${img.image_url}`);
               const isLightActive = existingLightImg === img.image_url;
               const isDarkActive = existingDarkImg === img.image_url;
 

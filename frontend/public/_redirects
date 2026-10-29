@@ -1,0 +1,2 @@
+# Cloudflare Pages SPA fallback: rewrites all client routes to index.html
+/*    /index.html   200
