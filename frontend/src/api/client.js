@@ -14,7 +14,9 @@ const STATIC_BASE_URL = import.meta.env.VITE_STATIC_URL || '';
 export function staticUrl(path) {
   if (!path) return null;
   if (path.startsWith('http')) return path;
-  return `${STATIC_BASE_URL}${path}`;
+  const base = STATIC_BASE_URL.replace(/\/+$/, '');
+  const cleanPath = path.startsWith('/') ? path : `/${path}`;
+  return `${base}${cleanPath}`;
 }
 
 const client = axios.create({
