@@ -1,5 +1,18 @@
 # 🎮 COD Tournament Management System (GKV)
 
+[![Vercel Deployment](https://img.shields.io/badge/Frontend-Vercel-black?logo=vercel&logoColor=white)](https://cod-ivory.vercel.app)
+[![Render Backend](https://img.shields.io/badge/Backend-Render-46E3B7?logo=render&logoColor=white)](https://cod-ah1q.onrender.com)
+[![FastAPI](https://img.shields.io/badge/FastAPI-2.0.0-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![React](https://img.shields.io/badge/React-18.3-61DAFB?logo=react&logoColor=black)](https://react.dev)
+[![Vite](https://img.shields.io/badge/Vite-5.4-646CFF?logo=vite&logoColor=white)](https://vitejs.dev)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791?logo=postgresql&logoColor=white)](https://www.postgresql.org)
+
+### 🌐 Live Production Deployments
+- 🖥️ **Live Web Application (Frontend)**: [https://cod-ivory.vercel.app](https://cod-ivory.vercel.app)
+- ⚙️ **Live REST API (Backend)**: [https://cod-ah1q.onrender.com](https://cod-ah1q.onrender.com)
+- 📖 **Interactive API Documentation (Swagger UI)**: [https://cod-ah1q.onrender.com/docs](https://cod-ah1q.onrender.com/docs)
+- 🩺 **API Health Check**: [https://cod-ah1q.onrender.com/health](https://cod-ah1q.onrender.com/health)
+
 A modern web-based **Call of Duty Multiplayer Tournament Management System** built for **Gurukul Kangri Vishwavidyalaya (GKV)**.
 
 This project is the **next-generation version of the original COD Tournament Management System**, redesigned to provide a more scalable, modular, and maintainable architecture.
@@ -125,10 +138,36 @@ The old Flask implementation will remain available as a **reference and backup**
 
 # 🎮 COD Tournament Management System (GKV)
 
+[![Vercel Deployment](https://img.shields.io/badge/Frontend-Vercel-black?logo=vercel&logoColor=white)](https://cod-ivory.vercel.app)
+[![Render Backend](https://img.shields.io/badge/Backend-Render-46E3B7?logo=render&logoColor=white)](https://cod-ah1q.onrender.com)
+[![FastAPI](https://img.shields.io/badge/FastAPI-2.0.0-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![React](https://img.shields.io/badge/React-18.3-61DAFB?logo=react&logoColor=black)](https://react.dev)
+[![Vite](https://img.shields.io/badge/Vite-5.4-646CFF?logo=vite&logoColor=white)](https://vitejs.dev)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791?logo=postgresql&logoColor=white)](https://www.postgresql.org)
+
+### 🌐 Live Production Deployments
+- 🖥️ **Live Web Application (Frontend)**: [https://cod-ivory.vercel.app](https://cod-ivory.vercel.app)
+- ⚙️ **Live REST API (Backend)**: [https://cod-ah1q.onrender.com](https://cod-ah1q.onrender.com)
+- 📖 **Interactive API Documentation (Swagger UI)**: [https://cod-ah1q.onrender.com/docs](https://cod-ah1q.onrender.com/docs)
+- 🩺 **API Health Check**: [https://cod-ah1q.onrender.com/health](https://cod-ah1q.onrender.com/health)
+
 This project is a web-based system to manage **Call of Duty Multiplayer Tournament** events for our college (GKV). The system allows player registration, team formation, match result entry, and displays stats such as kills, deaths, assists, KD ratio, and yearly winners.
 
 ---
 # 🎮 COD Tournament Management System (GKV)
+
+[![Vercel Deployment](https://img.shields.io/badge/Frontend-Vercel-black?logo=vercel&logoColor=white)](https://cod-ivory.vercel.app)
+[![Render Backend](https://img.shields.io/badge/Backend-Render-46E3B7?logo=render&logoColor=white)](https://cod-ah1q.onrender.com)
+[![FastAPI](https://img.shields.io/badge/FastAPI-2.0.0-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![React](https://img.shields.io/badge/React-18.3-61DAFB?logo=react&logoColor=black)](https://react.dev)
+[![Vite](https://img.shields.io/badge/Vite-5.4-646CFF?logo=vite&logoColor=white)](https://vitejs.dev)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791?logo=postgresql&logoColor=white)](https://www.postgresql.org)
+
+### 🌐 Live Production Deployments
+- 🖥️ **Live Web Application (Frontend)**: [https://cod-ivory.vercel.app](https://cod-ivory.vercel.app)
+- ⚙️ **Live REST API (Backend)**: [https://cod-ah1q.onrender.com](https://cod-ah1q.onrender.com)
+- 📖 **Interactive API Documentation (Swagger UI)**: [https://cod-ah1q.onrender.com/docs](https://cod-ah1q.onrender.com/docs)
+- 🩺 **API Health Check**: [https://cod-ah1q.onrender.com/health](https://cod-ah1q.onrender.com/health)
 
 A modern web-based **Call of Duty Multiplayer Tournament Management System** built for **Gurukul Kangri Vishwavidyalaya (GKV)**.
 
@@ -303,7 +342,8 @@ These results can be used to generate:
 | Password Hashing  | bcrypt               |
 | API Documentation | Swagger UI / OpenAPI |
 | Version Control   | Git & GitHub         |
-| Deployment        | To be decided        |
+| Deployment (Frontend) | Vercel (https://cod-ivory.vercel.app) |
+| Deployment (Backend)  | Render (https://cod-ah1q.onrender.com) |
 
 ---
 
@@ -764,10 +804,10 @@ Developed for managing Call of Duty Multiplayer Tournament events at:
 
 | Component | Technology |
 |----------|------------|
-| Frontend | HTML, CSS, JavaScript |
-| Backend | Python Flask |
-| Database | MySQL |
-| Hosting (future) | IBM Cloud / College Server |
+| Frontend | React 18 + Vite |
+| Backend | Python FastAPI |
+| Database | PostgreSQL |
+| Hosting | Vercel (Frontend) & Render (Backend) |
 | Version Control | Git & GitHub |
  
  SKELETION :
@@ -802,4 +842,6 @@ Developed for managing Call of Duty Multiplayer Tournament events at:
 └── README.txt
 
 Contact info:
-Email: 236301126@gmail.com
+Email: 236301126@gkv.ac.in
+Live Frontend: https://cod-ivory.vercel.app
+Live Backend: https://cod-ah1q.onrender.com
