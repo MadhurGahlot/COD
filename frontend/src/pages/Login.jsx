@@ -27,9 +27,14 @@ export default function Login() {
       const destination = location.state?.from || (role === 'admin' ? '/admin' : '/');
       navigate(destination, { replace: true });
     } catch (err) {
-      setErrorMsg(
+      console.error('Login error details:', err);
+      if (!err.response) {
+        setErrorMsg('Cannot reach backend server. Check CORS or network.');
+      } else {
+        setErrorMsg(
         err.response?.data?.detail || 'Invalid username or password. Please verify your credentials.'
       );
+      }
     } finally {
       setLoading(false);
     }

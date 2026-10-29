@@ -45,8 +45,9 @@ async def add_security_headers(request, call_next):
 # ── CORS ──────────────────────────────────────────────────────────────────────
 # NOTE: allow_origins cannot be ["*"] when allow_credentials=True — browsers reject it.
 # Set FRONTEND_URL in .env for production (e.g. https://your-domain.com).
-_frontend_url = os.getenv("FRONTEND_URL", "http://localhost:3000")
+_frontend_url = os.getenv("FRONTEND_URL", "http://localhost:3000").rstrip("/")
 _allowed_origins = [
+    "https://cod-ivory.vercel.app",
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     _frontend_url,

@@ -1,11 +1,14 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL ||
+  (import.meta.env.PROD ? 'https://cod-ah1q.onrender.com/api' : '/api');
 
 // In production VITE_STATIC_URL points to the backend host (e.g. https://cod-api.onrender.com)
-// so uploaded images resolve correctly from Cloudflare Pages.
 // In dev mode it falls back to '' which keeps relative paths working via Vite proxy.
-const STATIC_BASE_URL = import.meta.env.VITE_STATIC_URL || '';
+const STATIC_BASE_URL =
+  import.meta.env.VITE_STATIC_URL ||
+  (import.meta.env.PROD ? 'https://cod-ah1q.onrender.com' : '');
 
 /**
  * Resolves a server-relative static path to an absolute URL.
