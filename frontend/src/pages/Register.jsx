@@ -59,9 +59,19 @@ export default function Register() {
       setStep(2);
       setSuccessMsg('Account created successfully! Set up your competitor profile below.');
     } catch (err) {
-      setErrorMsg(
-        err.response?.data?.detail || 'Failed to create account. Username or email may already be registered.'
-      );
+      console.error('Registration error:', err);
+      if (!err.response) {
+        setErrorMsg('Cannot reach backend server. Check network connection or CORS.');
+      } else {
+        const detail = err.response.data?.detail;
+        if (typeof detail === 'string') {
+          setErrorMsg(detail);
+        } else if (Array.isArray(detail)) {
+          setErrorMsg(detail.map(d => d.msg).join(', '));
+        } else {
+          setErrorMsg('Failed to create account. Username or email may already be registered.');
+        }
+      }
     } finally {
       setLoading(false);
     }
