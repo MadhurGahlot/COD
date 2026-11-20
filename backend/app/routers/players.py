@@ -38,18 +38,28 @@ def mask_email(email: Optional[str]) -> Optional[str]:
 # -------- PUBLIC --------
 
 @players_router.get("/")
-def get_players(year: int = datetime.now().year, db: Session = Depends(get_db)):
-    players = (
+def get_players(
+    year: Optional[int] = None,
+    status: Optional[str] = None,
+    db: Session = Depends(get_db)
+):
+    if year is None:
+        year = date.today().year
+
+    query = (
         db.query(Player, Team.team_name)
         .outerjoin(Team, Player.team_id == Team.id)
-        .filter(Player.year == year, Player.status == "active")
-        .order_by(Player.player_name)
-        .all()
+        .filter(Player.year == year)
     )
+
+    if status and status != "all":
+        query = query.filter(Player.status == status)
+
+    players = query.order_by(Player.player_name).all()
     return {
         "players": [
             {
-                **{c.key: getattr(p, c.key) for c in p.__table__.columns if c.key != "email"},
+                **{c.key: getattr(p, c.key) for c in p.__table__.columns},
                 "team_name": team_name
             }
             for p, team_name in players
@@ -314,27 +324,34 @@ async def register_player_profile(
             user_obj = db.query(User).filter(User.id == user_id).first()
             email = user_obj.email if user_obj else None
 
-        existing = db.query(Player).filter(Player.user_id == user_id, Player.year == current_year).first()
-        if existing:
-            raise HTTPException(status_code=400, detail="Already registered for this year")
-
-        if email:
-            existing_email = db.query(Player).filter(Player.email == email, Player.year == current_year).first()
-            if existing_email:
-                raise HTTPException(status_code=400, detail="A player profile with this email already exists for this year")
-
         filename = save_photo(photo)
 
-        player = Player(
-            player_name=player_name,
-            cod_name=cod_name or player_name,
-            email=email,
-            user_id=user_id,
-            photo=filename,
-            year=current_year,
-            status="pending"
-        )
-        db.add(player)
+        player = db.query(Player).filter(Player.user_id == user_id, Player.year == current_year).first()
+        if not player:
+            player = Player(
+                player_name=player_name,
+                cod_name=cod_name or player_name,
+                email=email,
+                user_id=user_id,
+                photo=filename,
+                department=department.strip() if department else None,
+                contact=contact.strip() if contact else None,
+                year=current_year,
+                status="pending"
+            )
+            db.add(player)
+        else:
+            player.player_name = player_name
+            player.cod_name = cod_name or player_name
+            if email:
+                player.email = email
+            if filename:
+                player.photo = filename
+            if department:
+                player.department = department.strip()
+            if contact:
+                player.contact = contact.strip()
+
         db.commit()
         db.refresh(player)
         return {"message": "Registration submitted, awaiting team assignment", "player_id": player.id}
