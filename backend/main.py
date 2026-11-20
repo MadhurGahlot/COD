@@ -105,8 +105,32 @@ codapp.include_router(audit_router, prefix="/api")
 # All routes are served under /api prefix only (no legacy root duplication)
 
 
-# ── Create DB tables ───────────────────────────────────────────────────────────
+# ── Create DB tables & Schema Sync ─────────────────────────────────────────────
 Base.metadata.create_all(bind=engine)
+
+def sync_database_schema():
+    """Ensure older tables receive new columns and enum types without data loss."""
+    try:
+        with engine.begin() as conn:
+            # players table column migrations
+            conn.execute(text("ALTER TABLE players ADD COLUMN IF NOT EXISTS user_id INTEGER;"))
+            conn.execute(text("ALTER TABLE players ADD COLUMN IF NOT EXISTS cod_name VARCHAR(100);"))
+            conn.execute(text("ALTER TABLE players ADD COLUMN IF NOT EXISTS is_mvp SMALLINT DEFAULT 0;"))
+            try:
+                conn.execute(text("""
+                    DO $$ BEGIN
+                        CREATE TYPE player_status_enum AS ENUM ('active', 'pending');
+                    EXCEPTION
+                        WHEN duplicate_object THEN null;
+                    END $$;
+                """))
+                conn.execute(text("ALTER TABLE players ADD COLUMN IF NOT EXISTS status player_status_enum DEFAULT 'pending';"))
+            except Exception:
+                conn.execute(text("ALTER TABLE players ADD COLUMN IF NOT EXISTS status VARCHAR(20) DEFAULT 'pending';"))
+    except Exception as e:
+        print("Schema sync notice:", e)
+
+sync_database_schema()
 
 
 @codapp.get("/")

@@ -8,7 +8,7 @@ export const register = (username, email, password) =>
 
 export const registerPlayerProfile = (formData) =>
   client.post('/players/register_profile', formData, {
-    headers: { 'Content-Type': 'multipart/form-data' },
+    headers: { 'Content-Type': undefined },
   });
 
 export const getMyProfile = (year) =>

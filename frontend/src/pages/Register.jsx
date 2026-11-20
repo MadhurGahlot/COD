@@ -104,9 +104,19 @@ export default function Register() {
       );
       setTimeout(() => navigate('/'), 3000);
     } catch (err) {
-      setErrorMsg(
-        err.response?.data?.detail || 'Failed to register player profile. You can update this later.'
-      );
+      console.error('Profile registration error:', err);
+      if (!err.response) {
+        setErrorMsg('Cannot reach backend server. Check network connection or CORS.');
+      } else {
+        const detail = err.response.data?.detail;
+        if (typeof detail === 'string') {
+          setErrorMsg(detail);
+        } else if (Array.isArray(detail)) {
+          setErrorMsg(detail.map(d => d.msg).join(', '));
+        } else {
+          setErrorMsg('Failed to register player profile. You can update this later.');
+        }
+      }
     } finally {
       setLoading(false);
     }
