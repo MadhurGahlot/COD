@@ -114,6 +114,7 @@ git checkout 2VERSION
 | DB connection pool | `database.py` | `pool_size=5`, `max_overflow=10` |
 | Fix teams year default | `teams.py` | Was `datetime.now().year` at import time — now computed per-request |
 | GitHub Actions CI | `.github/workflows/check.yml` | Runs `py_compile` on all backend `.py` files on every push to `main`/`2VERSION` |
+| Player Profile Registration Fix | `auth.js`, `players.py`, `main.py`, `Register.jsx` | Removed explicit multipart Content-Type header to allow browser boundary, wrapped DB call in try/except with rollback, added auto-migration for `user_id`/`cod_name`/`status` columns on startup, improved profile error message rendering |
 
 ---
 
