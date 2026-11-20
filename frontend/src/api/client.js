@@ -25,7 +25,7 @@ export function staticUrl(path) {
 const client = axios.create({
   baseURL: API_BASE_URL,
   headers: { 'Content-Type': 'application/json' },
-  timeout: 15000,
+  timeout: 60000, // 60s timeout to accommodate Render free tier cold starts (takes 30-50s)
 });
 
 // Request interceptor — attach Bearer token
