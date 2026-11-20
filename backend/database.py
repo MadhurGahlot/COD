@@ -13,9 +13,11 @@ if database_password.startswith("postgres://"):
     database_password = database_password.replace("postgres://", "postgresql://", 1)
 
 engine = create_engine(
-   database_password,
-   pool_pre_ping=True,
-   pool_recycle=300,
+    database_password,
+    pool_pre_ping=True,
+    pool_recycle=300,
+    pool_size=5,
+    max_overflow=10,
 )
 
 SessionLocal = sessionmaker(

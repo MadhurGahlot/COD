@@ -41,7 +41,7 @@ def register(
         )
 
     existing_email = (
-        dB.query(User)
+        db.query(User)
         .filter(User.email == user_data.email)
         .first()
     )
@@ -65,7 +65,7 @@ def register(
     except HTTPException:
         raise
     except Exception as e:
-        dB.rollback()
+        db.rollback()
         print("Registration Failure Traceback:", traceback.format_exc())
         raise HTTPException(
             status_code=400,
@@ -119,7 +119,7 @@ def login(
                 "username": admin.username
             }
 
-    user = dB.query(User).filter(User.username == login_data.username).first()
+    user = db.query(User).filter(User.username == login_data.username).first()
     if not user:
         raise HTTPException(status_code=401, detail="Invalid username or password")
 

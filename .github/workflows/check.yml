@@ -1,0 +1,27 @@
+name: Backend Lint Check
+
+on:
+  push:
+    branches: [main, 2VERSION]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    name: Python Syntax Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Check all Python files compile
+        run: |
+          find backend -name "*.py" | xargs -I{} python -m py_compile {}
+          echo "✅ All Python files passed syntax check"
+

@@ -1,9 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form
 from sqlalchemy.orm import Session
 from typing import Optional
-from datetime import datetime
+from datetime import datetime, date
 import os
 import shutil
+import traceback
 
 from database import get_db
 from app.models.player import Player
@@ -295,35 +296,57 @@ def assign_player(
 @players_router.post("/register_profile")
 async def register_player_profile(
     player_name: str = Form(...),
-    cod_name: str = Form(...),
-    email: str = Form(...),
+    cod_name: Optional[str] = Form(None),
+    email: Optional[str] = Form(None),
+    department: Optional[str] = Form(None),
+    contact: Optional[str] = Form(None),
     year: Optional[int] = Form(None),
     photo: Optional[UploadFile] = File(None),
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user)
 ):
-    user_id = int(current_user["sub"])
-    current_year = year or datetime.now().year
+    try:
+        user_id = int(current_user["sub"])
+        current_year = year or date.today().year
 
-    existing = db.query(Player).filter(Player.user_id == user_id, Player.year == current_year).first()
-    if existing:
-        raise HTTPException(status_code=400, detail="Already registered for this year")
+        # Fallback email to logged-in user's email if not provided
+        if not email:
+            user_obj = db.query(User).filter(User.id == user_id).first()
+            email = user_obj.email if user_obj else None
 
-    filename = save_photo(photo)
+        existing = db.query(Player).filter(Player.user_id == user_id, Player.year == current_year).first()
+        if existing:
+            raise HTTPException(status_code=400, detail="Already registered for this year")
 
-    player = Player(
-        player_name=player_name,
-        cod_name=cod_name,
-        email=email,
-        user_id=user_id,
-        photo=filename,
-        year=current_year,
-        status="pending"
-    )
-    db.add(player)
-    db.commit()
-    db.refresh(player)
-    return {"message": "Registration submitted, awaiting team assignment", "player_id": player.id}
+        if email:
+            existing_email = db.query(Player).filter(Player.email == email, Player.year == current_year).first()
+            if existing_email:
+                raise HTTPException(status_code=400, detail="A player profile with this email already exists for this year")
+
+        filename = save_photo(photo)
+
+        player = Player(
+            player_name=player_name,
+            cod_name=cod_name or player_name,
+            email=email,
+            user_id=user_id,
+            photo=filename,
+            year=current_year,
+            status="pending"
+        )
+        db.add(player)
+        db.commit()
+        db.refresh(player)
+        return {"message": "Registration submitted, awaiting team assignment", "player_id": player.id}
+    except HTTPException:
+        raise
+    except Exception as e:
+        db.rollback()
+        print("Player Profile Registration Failure Traceback:", traceback.format_exc())
+        raise HTTPException(
+            status_code=400,
+            detail=f"{type(e).__name__}: {str(e)}"
+        )
 
 
 @players_router.get("/me/profile")

@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Lock, User, LogIn, AlertCircle } from 'lucide-react';
+import { Lock, User, LogIn, AlertCircle, Eye, EyeOff } from 'lucide-react';
 import { login } from '../api/auth';
 import { useAuth } from '../context/AuthContext';
 
 export default function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -100,13 +101,22 @@ export default function Login() {
               <div className="relative">
                 <Lock className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 opacity-40" />
                 <input
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full pl-11 pr-4 py-2.5 rounded-full text-sm bg-white/60 dark:bg-[#151413]/60 border border-black/15 dark:border-white/15 text-light-text dark:text-dark-text placeholder:opacity-40 focus:outline-none focus:border-black/40 dark:focus:border-white/40 backdrop-blur-sm transition-all"
+                  className="w-full pl-11 pr-11 py-2.5 rounded-full text-sm bg-white/60 dark:bg-[#151413]/60 border border-black/15 dark:border-white/15 text-light-text dark:text-dark-text placeholder:opacity-40 focus:outline-none focus:border-black/40 dark:focus:border-white/40 backdrop-blur-sm transition-all"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(p => !p)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 opacity-40 hover:opacity-70 transition-opacity"
+                  tabIndex={-1}
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
               </div>
             </div>
 
