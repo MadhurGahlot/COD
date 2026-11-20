@@ -14,6 +14,7 @@ __pycache__/
 .mypy_cache/
 .ruff_cache/
 .coverage
+.coverage.*
 htmlcov/
 *.egg-info/
 *.egg
@@ -106,3 +107,46 @@ ehthumbs.db
 Thumbs.db
 desktop.ini
 * - Copy.*
+
+# ── 10. Security & Secrets ────────────────────────────────────────────────────
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+secrets.json
+secrets.yaml
+secrets.yml
+credentials.json
+
+# ── 11. GitHub Actions local artifacts ───────────────────────────────────────
+# (track workflow YAML but not runner artifacts)
+.github/actions/*/node_modules/
+.act/
+
+# ── 12. Render / Deployment artifacts ────────────────────────────────────────
+.render/
+.render-buildpacks.json
+render-*.log
+
+# ── 13. Vercel artifacts ──────────────────────────────────────────────────────
+.vercel/
+.vercel-output/
+
+# ── 14. Test & Coverage Reports ──────────────────────────────────────────────
+test-results/
+junit.xml
+coverage.xml
+*.lcov
+reports/
+
+# ── 15. Jupyter Notebooks checkpoints ────────────────────────────────────────
+.ipynb_checkpoints/
+
+# ── 16. Misc scratch / temp ───────────────────────────────────────────────────
+*.orig
+*.rej
+scratch/
+tmp/
+temp/
+

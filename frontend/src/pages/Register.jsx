@@ -11,6 +11,8 @@ import {
   Building,
   Phone,
   Crosshair,
+  Eye,
+  EyeOff,
 } from 'lucide-react';
 import { register, login, registerPlayerProfile } from '../api/auth';
 import { useAuth } from '../context/AuthContext';
@@ -21,6 +23,8 @@ export default function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   // Profile fields (Step 2)
   const [playerName, setPlayerName] = useState('');
@@ -44,17 +48,17 @@ export default function Register() {
       return;
     }
 
-    if (password.length < 6) {
-      setErrorMsg('Password should be at least 6 characters');
+    if (password.length < 8) {
+      setErrorMsg('Password must be at least 8 characters');
       return;
     }
 
     setLoading(true);
     try {
-      await register(username, email, password);
-      const loginRes = await login(username, password);
+      await register(username.trim(), email.trim().toLowerCase(), password);
+      const loginRes = await login(username.trim(), password);
       const { access_token, role } = loginRes.data;
-      loginUser(access_token, role, username);
+      loginUser(access_token, role, username.trim());
 
       setStep(2);
       setSuccessMsg('Account created successfully! Set up your competitor profile below.');
@@ -216,13 +220,22 @@ export default function Register() {
                 <div className="relative">
                   <Lock className="w-5 h-5 absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500" />
                   <input
-                    type="password"
+                    type={showPassword ? 'text' : 'password'}
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Min. 6 characters"
-                    className="w-full pl-11 pr-4 py-3.5 rounded-2xl text-sm sm:text-base bg-white dark:bg-[#151413] border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-400 transition-all"
+                    placeholder="Min. 8 characters, include a number"
+                    className="w-full pl-11 pr-11 py-3.5 rounded-2xl text-sm sm:text-base bg-white dark:bg-[#151413] border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-400 transition-all"
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(p => !p)}
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+                    tabIndex={-1}
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  </button>
                 </div>
               </div>
 
@@ -233,13 +246,22 @@ export default function Register() {
                 <div className="relative">
                   <Lock className="w-5 h-5 absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500" />
                   <input
-                    type="password"
+                    type={showConfirm ? 'text' : 'password'}
                     required
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="Re-enter password"
-                    className="w-full pl-11 pr-4 py-3.5 rounded-2xl text-sm sm:text-base bg-white dark:bg-[#151413] border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-400 transition-all"
+                    className="w-full pl-11 pr-11 py-3.5 rounded-2xl text-sm sm:text-base bg-white dark:bg-[#151413] border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-400 transition-all"
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirm(p => !p)}
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+                    tabIndex={-1}
+                    aria-label={showConfirm ? 'Hide password' : 'Show password'}
+                  >
+                    {showConfirm ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  </button>
                 </div>
               </div>
 
