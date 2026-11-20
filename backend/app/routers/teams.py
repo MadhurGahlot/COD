@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
 from typing import Optional
-from datetime import datetime
+from datetime import date
 
 from database import get_db
 from app.models.team import Team
@@ -24,7 +24,9 @@ class TeamUpdate(BaseModel):
 # -------- PUBLIC --------
 
 @teams_router.get("/")
-def get_teams(year: int = datetime.now().year, db: Session = Depends(get_db)):
+def get_teams(year: Optional[int] = None, db: Session = Depends(get_db)):
+    if year is None:
+        year = date.today().year
     from sqlalchemy import func
     results = (
         db.query(

@@ -1,7 +1,9 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import JSONResponse
+from fastapi.exceptions import RequestValidationError
 from dotenv import load_dotenv
 from sqlalchemy import text
 import os
@@ -28,6 +30,24 @@ codapp = FastAPI(
     contact={"email": "236301126@gkv.ac.in"},
     version="2.0.0"
 )
+
+
+# ── Global Exception Handlers ──────────────────────────────────────────────────
+@codapp.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    errors = exc.errors()
+    messages = [e.get("msg", "Validation error") for e in errors]
+    return JSONResponse(
+        status_code=422,
+        content={"detail": "; ".join(messages)},
+    )
+
+@codapp.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    return JSONResponse(
+        status_code=500,
+        content={"detail": "Internal server error"},
+    )
 
 # ── Performance: GZip Compression for Mobile Networks ─────────────────────────
 codapp.add_middleware(GZipMiddleware, minimum_size=1000)

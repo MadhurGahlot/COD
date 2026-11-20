@@ -101,6 +101,22 @@ git checkout 2VERSION
 
 ---
 
+## Improvements Applied (2026-11-20 session 2)
+
+| Change | File(s) | Detail |
+|---|---|---|
+| Password validation (backend) | `userschema.py` | Min 8 chars, must have letter + number |
+| Email domain enforcement | `userschema.py` | Only `@gkv.ac.in` allowed |
+| Username validation | `userschema.py` | Min 3 chars, alphanumeric + underscore only |
+| Input trim on submit | `Register.jsx` | `.trim()` + `.toLowerCase()` on username/email |
+| Password show/hide toggle | `Register.jsx`, `Login.jsx` | Eye icon on all password fields |
+| Global exception handler | `main.py` | 500 no longer leaks internals; validation errors return clean messages |
+| DB connection pool | `database.py` | `pool_size=5`, `max_overflow=10` |
+| Fix teams year default | `teams.py` | Was `datetime.now().year` at import time — now computed per-request |
+| GitHub Actions CI | `.github/workflows/check.yml` | Runs `py_compile` on all backend `.py` files on every push to `main`/`2VERSION` |
+
+---
+
 ## How to Verify Registration Works
 After pushing to main and waiting ~60s for Render to redeploy:
 
