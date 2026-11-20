@@ -65,7 +65,11 @@ export default function Register() {
     } catch (err) {
       console.error('Registration error:', err);
       if (!err.response) {
-        setErrorMsg('Cannot reach backend server. Check network connection or CORS.');
+        if (err.code === 'ECONNABORTED') {
+          setErrorMsg('Server is waking up (Render cold start takes ~30-50s). Please try again in 10 seconds.');
+        } else {
+          setErrorMsg('Cannot reach backend server. Check network connection or CORS.');
+        }
       } else {
         const detail = err.response.data?.detail;
         if (typeof detail === 'string') {
@@ -106,7 +110,11 @@ export default function Register() {
     } catch (err) {
       console.error('Profile registration error:', err);
       if (!err.response) {
-        setErrorMsg('Cannot reach backend server. Check network connection or CORS.');
+        if (err.code === 'ECONNABORTED') {
+          setErrorMsg('Server is waking up (Render cold start takes ~30-50s). Please try again in 10 seconds.');
+        } else {
+          setErrorMsg('Cannot reach backend server. Check network connection or CORS.');
+        }
       } else {
         const detail = err.response.data?.detail;
         if (typeof detail === 'string') {
