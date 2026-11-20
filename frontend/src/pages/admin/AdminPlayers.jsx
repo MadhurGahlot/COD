@@ -318,8 +318,13 @@ export default function AdminPlayers() {
                               {p.cod_name}
                             </span>
                             <span className="text-[11px] text-light-muted dark:text-dark-muted block">
-                              {p.player_name || 'Operative'}
+                              {p.player_name || 'Operative'} {p.department ? `• ${p.department}` : ''}
                             </span>
+                            {p.contact && (
+                              <span className="text-[10px] text-light-muted dark:text-dark-muted block font-mono">
+                                📞 {p.contact}
+                              </span>
+                            )}
                           </div>
                         </div>
                       </td>
@@ -331,12 +336,15 @@ export default function AdminPlayers() {
                             {p.team_name}
                           </span>
                         ) : (
-                          <button
-                            onClick={() => openAssignModal(p)}
-                            className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 hover:bg-amber-500/20 transition-colors"
-                          >
-                            <LinkIcon className="w-3 h-3" /> Assign Squad
-                          </button>
+                          <div className="flex items-center gap-2">
+                            <Badge variant="warning" size="sm">Pending Squad</Badge>
+                            <button
+                              onClick={() => openAssignModal(p)}
+                              className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 hover:bg-amber-500/20 transition-colors"
+                            >
+                              <LinkIcon className="w-3 h-3" /> Assign Squad
+                            </button>
+                          </div>
                         )}
                       </td>
 

@@ -110,25 +110,57 @@ Base.metadata.create_all(bind=engine)
 
 def sync_database_schema():
     """Ensure older tables receive new columns and enum types without data loss."""
+    migrations = [
+        "ALTER TABLE players ADD COLUMN IF NOT EXISTS user_id INTEGER;",
+        "ALTER TABLE players ADD COLUMN IF NOT EXISTS cod_name VARCHAR(100);",
+        "ALTER TABLE players ADD COLUMN IF NOT EXISTS is_mvp SMALLINT DEFAULT 0;",
+        "ALTER TABLE players ADD COLUMN IF NOT EXISTS department VARCHAR(100);",
+        "ALTER TABLE players ADD COLUMN IF NOT EXISTS contact VARCHAR(50);",
+    ]
+    for stmt in migrations:
+        try:
+            with engine.begin() as conn:
+                conn.execute(text(stmt))
+        except Exception as e:
+            print("Schema migration notice:", e)
+
+    # Status column & enum
     try:
         with engine.begin() as conn:
-            # players table column migrations
-            conn.execute(text("ALTER TABLE players ADD COLUMN IF NOT EXISTS user_id INTEGER;"))
-            conn.execute(text("ALTER TABLE players ADD COLUMN IF NOT EXISTS cod_name VARCHAR(100);"))
-            conn.execute(text("ALTER TABLE players ADD COLUMN IF NOT EXISTS is_mvp SMALLINT DEFAULT 0;"))
-            try:
-                conn.execute(text("""
-                    DO $$ BEGIN
-                        CREATE TYPE player_status_enum AS ENUM ('active', 'pending');
-                    EXCEPTION
-                        WHEN duplicate_object THEN null;
-                    END $$;
-                """))
-                conn.execute(text("ALTER TABLE players ADD COLUMN IF NOT EXISTS status player_status_enum DEFAULT 'pending';"))
-            except Exception:
-                conn.execute(text("ALTER TABLE players ADD COLUMN IF NOT EXISTS status VARCHAR(20) DEFAULT 'pending';"))
+            conn.execute(text("""
+                DO $$ BEGIN
+                    CREATE TYPE player_status_enum AS ENUM ('active', 'pending');
+                EXCEPTION
+                    WHEN duplicate_object THEN null;
+                END $$;
+            """))
     except Exception as e:
-        print("Schema sync notice:", e)
+        print("Enum create notice:", e)
+
+    try:
+        with engine.begin() as conn:
+            conn.execute(text("ALTER TABLE players ADD COLUMN IF NOT EXISTS status player_status_enum DEFAULT 'pending';"))
+    except Exception:
+        try:
+            with engine.begin() as conn:
+                conn.execute(text("ALTER TABLE players ADD COLUMN IF NOT EXISTS status VARCHAR(20) DEFAULT 'pending';"))
+        except Exception as e:
+            print("Status column notice:", e)
+
+    # Backfill registered users who don't have a player profile into players table so admin sees them immediately
+    try:
+        with engine.begin() as conn:
+            conn.execute(text("""
+                INSERT INTO players (user_id, player_name, cod_name, email, year, status)
+                SELECT u.id, u.username, u.username, u.email, 2026, 'pending'
+                FROM users u
+                WHERE u.role = 'player'
+                  AND NOT EXISTS (
+                      SELECT 1 FROM players p WHERE p.user_id = u.id OR p.email = u.email
+                  );
+            """))
+    except Exception as e:
+        print("User backfill notice:", e)
 
 sync_database_schema()
 

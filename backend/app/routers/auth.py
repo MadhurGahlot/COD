@@ -5,6 +5,8 @@ import traceback
 from app.schemas.userschema import UserRegister, UserLogin
 from database import get_db
 from app.models.user import User, Admin
+from app.models.player import Player
+from datetime import date
 
 from app.models.security import (
     hashpassword,
@@ -62,6 +64,23 @@ def register(
         db.add(user)
         db.commit()
         db.refresh(user)
+
+        # Create corresponding pending player record so they appear in Admin panel immediately
+        try:
+            current_year = date.today().year
+            player = Player(
+                user_id=user.id,
+                player_name=user.username,
+                cod_name=user.username,
+                email=user.email,
+                year=current_year,
+                status="pending"
+            )
+            db.add(player)
+            db.commit()
+        except Exception as player_err:
+            db.rollback()
+            print("Auto-create pending player notice:", player_err)
     except HTTPException:
         raise
     except Exception as e:

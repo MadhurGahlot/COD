@@ -20,3 +20,5 @@ class Player(Base):
     total_matches = Column(Integer, default=0)
     is_mvp = Column(SmallInteger, default=0)
     status = Column(Enum("active", "pending", name="player_status_enum"), default="pending")
+    department = Column(String(100), nullable=True)
+    contact = Column(String(50), nullable=True)

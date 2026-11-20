@@ -30,7 +30,11 @@ export default function Login() {
     } catch (err) {
       console.error('Login error details:', err);
       if (!err.response) {
-        setErrorMsg('Cannot reach backend server. Check CORS or network.');
+        if (err.code === 'ECONNABORTED') {
+          setErrorMsg('Server is waking up (Render cold start takes ~30-50s). Please try again in 10 seconds.');
+        } else {
+          setErrorMsg('Cannot reach backend server. Check CORS or network.');
+        }
       } else {
         setErrorMsg(
         err.response?.data?.detail || 'Invalid username or password. Please verify your credentials.'

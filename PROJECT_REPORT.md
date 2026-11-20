@@ -115,6 +115,7 @@ git checkout 2VERSION
 | Fix teams year default | `teams.py` | Was `datetime.now().year` at import time — now computed per-request |
 | GitHub Actions CI | `.github/workflows/check.yml` | Runs `py_compile` on all backend `.py` files on every push to `main`/`2VERSION` |
 | Player Profile Registration Fix | `auth.js`, `players.py`, `main.py`, `Register.jsx` | Removed explicit multipart Content-Type header to allow browser boundary, wrapped DB call in try/except with rollback, added auto-migration for `user_id`/`cod_name`/`status` columns on startup, improved profile error message rendering |
+| Admin Panel 0 Players & Step 2 Upsert Fix | `player.py`, `auth.py`, `players.py`, `main.py`, `AdminPlayers.jsx` | 1) Auto-create pending player profile on registration and backfill existing registered users into players table; 2) Change register_profile from erroring on existing to upserting (saving mobile/contact & department); 3) get_players returns all players including pending squad assignments in Admin panel |
 
 ---
 
